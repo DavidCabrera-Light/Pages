@@ -1,0 +1,793 @@
+package Controlador;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import Config.Conexion;
+import Modelo.Demanda;
+import Modelo.DemandaDAO;
+import Modelo.Estadisticos;
+import Modelo.Ingresar;
+import Modelo.IngresarDAO;
+import Modelo.Ingresos;
+import Modelo.IngresosDAO;
+import Modelo.ListaInsumos;
+import Modelo.ListaInsumosDAO;
+import Modelo.Salidas;
+import Modelo.SalidasDAO;
+import Modelo.Usuario;
+import Modelo.UsuarioDAO;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.swing.JOptionPane;
+import Modelo.Sacar;
+import Modelo.SacarAchacachi;
+import Modelo.SacarAchacachiDAO;
+import Modelo.SacarChallapata;
+import Modelo.SacarChallapataDAO;
+import javax.swing.*;
+import Modelo.SacarDAO;
+import Modelo.SacarIvirgarzama;
+import Modelo.SacarIvirgarzamaDAO;
+import Modelo.SacarSanAndres;
+import Modelo.SacarSanAndresDAO;
+import Modelo.SacarSanLorenzo;
+import Modelo.SacarSanLorenzoDAO;
+import Modelo.SaldosAchacachi;
+import Modelo.SaldosAchacachiDAO;
+import Modelo.SaldosAchacachiOrdenado;
+import Modelo.SaldosAchacachiOrdenadoDAO;
+import Modelo.SaldosChallapata;
+import Modelo.SaldosChallapataDAO;
+import Modelo.SaldosChallapataOrdenado;
+import Modelo.SaldosChallapataOrdenadoDAO;
+import Modelo.SaldosIvirgarzama;
+import Modelo.SaldosIvirgarzamaDAO;
+import Modelo.SaldosIvirgarzamaOrdenado;
+import Modelo.SaldosIvirgarzamaOrdenadoDAO;
+import Modelo.SaldosSanAndres;
+import Modelo.SaldosSanAndresDAO;
+import Modelo.SaldosSanAndresOrdenado;
+import Modelo.SaldosSanAndresOrdenadoDAO;
+import Modelo.SaldosSanLorenzo;
+import Modelo.SaldosSanLorenzoDAO;
+import Modelo.SaldosSanLorenzoOrdenado;
+import Modelo.SaldosSanLorenzoOrdenadoDAO;
+import Modelo.TotalIngresosDAO;
+
+import Modelo.TotalIngresosPageDAO;
+import Modelo.TotalIngresosPages;
+import Modelo.TotalSalidasDAO;
+import Modelo.User;
+import Modelo.UserDAO;
+import java.awt.Color;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.AxisSpace;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.ui.RectangleInsets;
+
+/**
+ *
+ * @author XTREME GAMER
+ */
+public class ControladorSalidas extends HttpServlet {
+
+    Conexion cn = new Conexion();
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
+
+    Usuario us = new Usuario();
+    UsuarioDAO udao = new UsuarioDAO();
+    Estadisticos estdao = new Estadisticos();
+    Demanda dem = new Demanda();
+    DemandaDAO demdao = new DemandaDAO();
+
+    Salidas sal = new Salidas();
+    SalidasDAO salDAO = new SalidasDAO();
+    Sacar sac = new Sacar();
+    SacarDAO sdao = new SacarDAO();
+    TotalSalidasDAO tDAO = new TotalSalidasDAO();
+
+    SacarAchacachi sacachacachi = new SacarAchacachi();
+    SacarAchacachiDAO sachacachiDAO = new SacarAchacachiDAO();
+    SacarChallapata sacchallapata = new SacarChallapata();
+    SacarChallapataDAO schallapataDAO = new SacarChallapataDAO();
+    SacarIvirgarzama sacivirgarzama = new SacarIvirgarzama();
+    SacarIvirgarzamaDAO sivirgarzamaDAO = new SacarIvirgarzamaDAO();
+    SacarSanLorenzo sacsanlorenzo = new SacarSanLorenzo();
+    SacarSanLorenzoDAO ssanlorenzoDAO = new SacarSanLorenzoDAO();
+    SacarSanAndres sacsanandres = new SacarSanAndres();
+    SacarSanAndresDAO ssanandresDAO = new SacarSanAndresDAO();
+
+    Ingresos ingr = new Ingresos();
+    IngresosDAO ingDAO = new IngresosDAO();
+    Ingresar ingresar = new Ingresar();
+    IngresarDAO iDAO = new IngresarDAO();
+    TotalIngresosDAO tiDAO = new TotalIngresosDAO();
+
+    ListaInsumos listainsumos = new ListaInsumos();
+    ListaInsumosDAO listainsumosDAO = new ListaInsumosDAO();
+    TotalIngresosPages totalingresospage = new TotalIngresosPages();
+    TotalIngresosPageDAO totalingresospageDAO = new TotalIngresosPageDAO();
+
+    SaldosAchacachi saldosachacachi = new SaldosAchacachi();
+    SaldosAchacachiDAO saldosachacachiDAO = new SaldosAchacachiDAO();
+    SaldosChallapata saldoschallapata = new SaldosChallapata();
+    SaldosChallapataDAO saldoschallapataDAO = new SaldosChallapataDAO();
+    SaldosIvirgarzama saldosivirgarzama = new SaldosIvirgarzama();
+    SaldosIvirgarzamaDAO saldosivirgarzamaDAO = new SaldosIvirgarzamaDAO();
+    SaldosSanLorenzo saldossanlorenzo = new SaldosSanLorenzo();
+    SaldosSanLorenzoDAO saldossanlorenzoDAO = new SaldosSanLorenzoDAO();
+    SaldosSanAndres saldossanandres = new SaldosSanAndres();
+    SaldosSanAndresDAO saldossanandresDAO = new SaldosSanAndresDAO();
+
+    SaldosAchacachiOrdenado saldosachacachiordenado = new SaldosAchacachiOrdenado();
+    SaldosAchacachiOrdenadoDAO saldosachacachiordenadoDAO = new SaldosAchacachiOrdenadoDAO();
+    SaldosChallapataOrdenado saldoschallapataordenado = new SaldosChallapataOrdenado();
+    SaldosChallapataOrdenadoDAO saldoschallapataordenadoDAO = new SaldosChallapataOrdenadoDAO();
+    SaldosIvirgarzamaOrdenado saldosivirgarzamaordenado = new SaldosIvirgarzamaOrdenado();
+    SaldosIvirgarzamaOrdenadoDAO saldosivirgarzamaordenadoDAO = new SaldosIvirgarzamaOrdenadoDAO();
+    SaldosSanLorenzoOrdenado saldossanlorenzoordenado = new SaldosSanLorenzoOrdenado();
+    SaldosSanLorenzoOrdenadoDAO saldossanlorenzoordenadoDAO = new SaldosSanLorenzoOrdenadoDAO();
+    SaldosSanAndresOrdenado saldossanandresordenado = new SaldosSanAndresOrdenado();
+    SaldosSanAndresOrdenadoDAO saldossanandresordenadoDAO = new SaldosSanAndresOrdenadoDAO();
+
+    User u_planta = new User();
+    UserDAO u_plantaDAO = new UserDAO();
+
+    int ide;
+    int bool = 1;
+    int idesal;
+
+    String timeStamp = "";
+    //String timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String menu = request.getParameter("menu");
+        String accion = request.getParameter("accion");
+
+        if (menu.equals("Salidas")) {
+
+            switch (accion) {
+                case "GenerarSalida":
+
+                    String justificacion = request.getParameter("txtTotal");
+                    sdao.actualizarsacarjustificaicon(justificacion);
+
+                    //metodos para ingresar datos a las salidas totales por plantas
+                    tDAO.actualizartotalsalidascodigo_achacachi();
+                    tDAO.actualizartotalsalidascodigo_challapata();
+                    tDAO.actualizartotalsalidascodigo_ivirgarzama();
+                    tDAO.actualizartotalsalidascodigo_sanlorenzo();
+                    tDAO.actualizartotalsalidascodigo_sanandres();
+                    //metodos para enviar datos de las salidas totales por plantas al total salidas
+                    tDAO.delete_total_salidas_insumos();
+                    tDAO.actualizartotalsalidascodigo_achacachitotal();
+                    tDAO.actualizartotalsalidascodigo_challapatatotal();
+                    tDAO.actualizartotalsalidascodigo_ivirgarzamatotal();
+                    tDAO.actualizartotalsalidascodigo_sanlorenzototal();
+                    tDAO.actualizartotalsalidascodigo_sanandrestotal();
+
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_achacachi();
+                    tDAO.delete_saldos_achacachi_detallado();
+                    tDAO.delete_saldos_achacachi_ordenado();
+                    tDAO.delete_saldos_andres();
+                    tDAO.delete_saldos_andres_detallado();
+                    tDAO.delete_saldos_andres_ordenado();
+                    tDAO.delete_saldos_challapata();
+                    tDAO.delete_saldos_challapata_detallado();
+                    tDAO.delete_saldos_challapata_ordenado();
+                    tDAO.delete_saldos_ivirgarzama();
+                    tDAO.delete_saldos_ivirgarzama_detallado();
+                    tDAO.delete_saldos_ivirgarzama_ordenado();
+                    tDAO.delete_saldos_sanlorenzo();
+                    tDAO.delete_saldos_sanlorenzo_detallado();
+                    tDAO.delete_saldos_sanlorenzo_ordenado();
+                    tDAO.delete_saldos_totales();
+                    tDAO.delete_saldos_totales_detallado();
+                    tDAO.delete_saldos_totales_ordenado();
+
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_achacachi();
+                    tiDAO.enviar_datos_ingresos_challapata();
+                    tiDAO.enviar_datos_ingresos_ivirgarzama();
+                    tiDAO.enviar_datos_ingresos_sanlorenzo();
+                    tiDAO.enviar_datos_ingresos_sanandres();
+                    tiDAO.enviar_datos_ingresos_totales();
+                    tDAO.enviar_datos_salidas_achacachi();
+                    tDAO.enviar_datos_salidas_challapata();
+                    tDAO.enviar_datos_salidas_ivirgrarzama();
+                    tDAO.enviar_datos_salidas_sanlorenzo();
+                    tDAO.enviar_datos_salidas_sanandres();
+                    tDAO.enviar_datos_salidas_totales();
+
+                    //resumen saldos
+                    tDAO.saldos_resumen_achacachi();
+                    tDAO.saldos_resumen_challapata();
+                    tDAO.saldos_resumen_ivirgarzama();
+                    tDAO.saldos_resumen_sanlorenzo();
+                    tDAO.saldos_resumen_sanandres();
+                    tDAO.saldos_resumen_totales();
+
+                    //saldos ordenados
+                    tDAO.saldos_detallados_achacachi();
+                    tDAO.saldos_detallados_challapata();
+                    tDAO.saldos_detallados_ivirgarzama();
+                    tDAO.saldos_detallados_sanlorenzo();
+                    tDAO.saldos_detallados_sanandres();
+                    tDAO.saldos_detallados_totales();
+
+                    request.getRequestDispatcher("ControladorSalidas?menu=Salidas&accion=ListarGeneral").forward(request, response);
+
+                    break;
+
+            }
+        }
+
+        if (menu.equals("SalidasAchacachi")) {
+            switch (accion) {
+                case "ListarGeneralAchacachi":
+                    List<Salidas> lista_sal = salDAO.listar();
+                    request.setAttribute("salidas_achacachi", lista_sal);
+                    sachacachiDAO.deletesacarT();
+                    //List<Sacar> lista_sacar = sachacachiDAO.listarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("SalidasPlantas/SalidasAchacachi.jsp").forward(request, response);
+                    break;
+                case "ListarAchacachi":
+                    List<Salidas> lista_sal2 = salDAO.listar();
+                    request.setAttribute("salidas_achacachi", lista_sal2);
+                    List<Sacar> lista_sacar = sachacachiDAO.listarSacar();
+                    request.setAttribute("sacar_achacachi", lista_sacar);
+                    request.getRequestDispatcher("SalidasPlantas/SalidasAchacachi.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Salidas> lista3 = salDAO.buscarT(dato);
+
+                    List<Sacar> lista_sacar2 = sachacachiDAO.listarSacar();
+                    request.setAttribute("sacar_achacachi", lista_sacar2);
+
+                    request.setAttribute("salidas_achacachi", lista3);
+                    request.getRequestDispatcher("SalidasPlantas/SalidasAchacachi.jsp").forward(request, response);
+                    break;
+                case "EliminarAchacachi":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    sachacachiDAO.deletesacar(ide);
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasAchacachi&accion=ListarAchacachi").forward(request, response);
+                    break;
+                case "Generar Salida":
+                    String justificacion = request.getParameter("txtTotal");
+                    sachacachiDAO.actualizarsacarjustificaicon(justificacion);
+                    //Ingresa datos a la tabla total salidas achacachi y actualiza las salidas totales
+                    tDAO.actualizartotalsalidascodigo_achacachi();
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_achacachi();
+                    tDAO.delete_saldos_achacachi_detallado();
+                    tDAO.delete_saldos_achacachi_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_achacachi();
+                    tDAO.enviar_datos_salidas_achacachi();
+                    //resumen saldos
+                    tDAO.saldos_resumen_achacachi();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_achacachi();
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasAchacachi&accion=ListarGeneralAchacachi").forward(request, response);
+
+                    break;
+
+                case "Sacar":
+                    String cantidadsal = request.getParameter("txtCantidadSal");
+
+                    if (cantidadsal.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Salidas> lista_sal3 = salDAO.listar();
+                        request.setAttribute("salidas_achacachi", lista_sal3);
+                        List<Sacar> lista_sacar22 = sachacachiDAO.listarSacar();
+                        request.setAttribute("sacar_achacachi", lista_sacar22);
+                        request.getRequestDispatcher("SalidasPlantas/SalidasAchacachi.jsp").forward(request, response);
+                    } else {
+
+                        int idsal = Integer.parseInt(request.getParameter("txtIdSal"));
+                        Salidas s = salDAO.listarIdSal(idsal);
+
+                        //String plantasal = request.getParameter("plantauserfinalsalcont");
+                        String plantasal = "Achacachi";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+
+                        sacachacachi.setDodigo(s.getCodigo());
+                        sacachacachi.setDescripcion(s.getDescripcion());
+                        sacachacachi.setUnidad(s.getUnidad());
+                        sacachacachi.setCantidad(cantidadsal);
+                        sacachacachi.setFecha(timeStamp);
+                        sacachacachi.setPlanta(plantasal);
+                        sachacachiDAO.agregarsacar(sacachacachi);
+                        //request.setAttribute("sacar", s);
+
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+                        request.getRequestDispatcher("ControladorSalidas?menu=SalidasAchacachi&accion=ListarAchacachi").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("SalidasChallapata")) {
+            switch (accion) {
+                case "ListarGeneralChallapata":
+                    List<Salidas> lista_sal = salDAO.listar();
+                    request.setAttribute("salidas_challapata", lista_sal);
+                    schallapataDAO.deletesacarT();
+                    //List<Sacar> lista_sacar = schallapataDAO.listarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasChallapata.jsp").forward(request, response);
+                    break;
+                case "ListarChallapata":
+                    List<Salidas> lista_sal2 = salDAO.listar();
+                    request.setAttribute("salidas_challapata", lista_sal2);
+                    List<Sacar> lista_sacar = schallapataDAO.listarSacar();
+                    request.setAttribute("sacar_challapata", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasChallapata.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Salidas> lista3 = salDAO.buscarT(dato);
+
+                    List<Sacar> lista_sacar2 = schallapataDAO.listarSacar();
+                    request.setAttribute("sacar_challapata", lista_sacar2);
+
+                    request.setAttribute("salidas_challapata", lista3);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasChallapata.jsp").forward(request, response);
+                    break;
+                case "EliminarChallapata":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    schallapataDAO.deletesacar(ide);
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasChallapata&accion=ListarChallapata").forward(request, response);
+                    break;
+                case "Generar Salida":
+
+                    String justificacion = request.getParameter("txtTotal");
+                    schallapataDAO.actualizarsacarjustificaicon(justificacion);
+                    //Ingresa datos a la tabla total salidas challapata y actualiza las salidas totales
+                    tDAO.actualizartotalsalidascodigo_challapata();
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_challapata();
+                    tDAO.delete_saldos_challapata_detallado();
+                    tDAO.delete_saldos_challapata_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_challapata();
+                    tDAO.enviar_datos_salidas_challapata();
+                    //resumen saldos
+                    tDAO.saldos_resumen_challapata();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_challapata();
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasChallapata&accion=ListarGeneralChallapata").forward(request, response);
+
+                    break;
+
+                case "Sacar":
+                    String cantidadsal = request.getParameter("txtCantidadSal");
+
+                    if (cantidadsal.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Salidas> lista_sal3 = salDAO.listar();
+                        request.setAttribute("salidas_challapata", lista_sal3);
+                        List<Sacar> lista_sacar22 = schallapataDAO.listarSacar();
+                        request.setAttribute("sacar_challapata", lista_sacar22);
+                        request.getRequestDispatcher("ReporteSalidas/SalidasChallapata.jsp").forward(request, response);
+                    } else {
+
+                        int idsal = Integer.parseInt(request.getParameter("txtIdSal"));
+                        Salidas s = salDAO.listarIdSal(idsal);
+
+                        //String plantasal = request.getParameter("plantauserfinalsalcont");
+                        String plantasal = "Challapata";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+
+                        sacchallapata.setDodigo(s.getCodigo());
+                        sacchallapata.setDescripcion(s.getDescripcion());
+                        sacchallapata.setUnidad(s.getUnidad());
+                        sacchallapata.setCantidad(cantidadsal);
+                        sacchallapata.setFecha(timeStamp);
+                        sacchallapata.setPlanta(plantasal);
+                        schallapataDAO.agregarsacar(sacchallapata);
+                        //request.setAttribute("sacar", s);
+
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+                        request.getRequestDispatcher("ControladorSalidas?menu=SalidasChallapata&accion=ListarChallapata").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("SalidasIvirgarzama")) {
+            switch (accion) {
+                case "ListarGeneralIvirgarzama":
+                    List<Salidas> lista_sal = salDAO.listar();
+                    request.setAttribute("salidas_ivirgarzama", lista_sal);
+                    sivirgarzamaDAO.deletesacarT();
+                    //List<Sacar> lista_sacar = sivirgarzamaDAO.listarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasIvirgarzama.jsp").forward(request, response);
+                    break;
+                case "ListarIvirgarzama":
+                    List<Salidas> lista_sal2 = salDAO.listar();
+                    request.setAttribute("salidas_ivirgarzama", lista_sal2);
+                    List<Sacar> lista_sacar = sivirgarzamaDAO.listarSacar();
+                    request.setAttribute("sacar_ivirgarzama", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasIvirgarzama.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Salidas> lista3 = salDAO.buscarT(dato);
+
+                    List<Sacar> lista_sacar2 = sivirgarzamaDAO.listarSacar();
+                    request.setAttribute("sacar_ivirgarzama", lista_sacar2);
+
+                    request.setAttribute("salidas_ivirgarzama", lista3);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasIvirgarzama.jsp").forward(request, response);
+                    break;
+                case "EliminarIvirgarzama":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    sivirgarzamaDAO.deletesacar(ide);
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasIvirgarzama&accion=ListarIvirgarzama").forward(request, response);
+                    break;
+                case "Generar Salida":
+
+                    String justificacion = request.getParameter("txtTotal");
+                    sivirgarzamaDAO.actualizarsacarjustificaicon(justificacion);
+                    //Ingresa datos a la tabla total salidas ivirgarzama y actualiza las salidas totales
+                    tDAO.actualizartotalsalidascodigo_ivirgarzama();
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_ivirgarzama();
+                    tDAO.delete_saldos_ivirgarzama_detallado();
+                    tDAO.delete_saldos_ivirgarzama_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_ivirgarzama();
+                    tDAO.enviar_datos_salidas_ivirgrarzama();
+                    //resumen saldos
+                    tDAO.saldos_resumen_ivirgarzama();
+                    //saldos ordenados  
+                    tDAO.saldos_detallados_ivirgarzama();
+                    
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasIvirgarzama&accion=ListarGeneralIvirgarzama").forward(request, response);
+
+                    break;
+
+                case "Sacar":
+                    String cantidadsal = request.getParameter("txtCantidadSal");
+
+                    if (cantidadsal.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Salidas> lista_sal3 = salDAO.listar();
+                        request.setAttribute("salidas_ivirgarzama", lista_sal3);
+                        List<Sacar> lista_sacar22 = sivirgarzamaDAO.listarSacar();
+                        request.setAttribute("sacar_ivirgarzama", lista_sacar22);
+                        request.getRequestDispatcher("ReporteSalidas/SalidasIvirgarzama.jsp").forward(request, response);
+                    } else {
+
+                        int idsal = Integer.parseInt(request.getParameter("txtIdSal"));
+                        Salidas s = salDAO.listarIdSal(idsal);
+
+                        //String plantasal = request.getParameter("plantauserfinalsalcont");
+                        String plantasal = "Ivirgarzama";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+
+                        sacivirgarzama.setDodigo(s.getCodigo());
+                        sacivirgarzama.setDescripcion(s.getDescripcion());
+                        sacivirgarzama.setUnidad(s.getUnidad());
+                        sacivirgarzama.setCantidad(cantidadsal);
+                        sacivirgarzama.setFecha(timeStamp);
+                        sacivirgarzama.setPlanta(plantasal);
+                        sivirgarzamaDAO.agregarsacar(sacivirgarzama);
+                        //request.setAttribute("sacar", s);
+
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+                        request.getRequestDispatcher("ControladorSalidas?menu=SalidasIvirgarzama&accion=ListarIvirgarzama").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("SalidasSanLorenzo")) {
+            switch (accion) {
+                case "ListarGeneralSanLorenzo":
+                    List<Salidas> lista_sal = salDAO.listar();
+                    request.setAttribute("salidas_sanlorenzo", lista_sal);
+                    ssanlorenzoDAO.deletesacarT();
+                    //List<Sacar> lista_sacar = ssanlorenzoDAO.listarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasSanLorenzo.jsp").forward(request, response);
+                    break;
+                case "ListarSanLorenzo":
+                    List<Salidas> lista_sal2 = salDAO.listar();
+                    request.setAttribute("salidas_sanlorenzo", lista_sal2);
+                    List<Sacar> lista_sacar = ssanlorenzoDAO.listarSacar();
+                    request.setAttribute("sacar_sanlorenzo", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasSanLorenzo.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Salidas> lista3 = salDAO.buscarT(dato);
+
+                    List<Sacar> lista_sacar2 = ssanlorenzoDAO.listarSacar();
+                    request.setAttribute("sacar_sanlorenzo", lista_sacar2);
+
+                    request.setAttribute("salidas_sanlorenzo", lista3);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasSanLorenzo.jsp").forward(request, response);
+                    break;
+                case "EliminarSanLorenzo":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    ssanlorenzoDAO.deletesacar(ide);
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasSanLorenzo&accion=ListarSanLorenzo").forward(request, response);
+                    break;
+                case "Generar Salida":
+                    String justificacion = request.getParameter("txtTotal");
+                    ssanlorenzoDAO.actualizarsacarjustificaicon(justificacion);
+                    //Ingresa datos a la tabla total salidas san lorenzo y actualiza las salidas totales
+                    tDAO.actualizartotalsalidascodigo_sanlorenzo();
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_sanlorenzo();
+                    tDAO.delete_saldos_sanlorenzo_detallado();
+                    tDAO.delete_saldos_sanlorenzo_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_sanlorenzo();
+                    tDAO.enviar_datos_salidas_sanlorenzo();
+                    //resumen saldos
+                    tDAO.saldos_resumen_sanlorenzo();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_sanlorenzo();
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasSanLorenzo&accion=ListarGeneralSanLorenzo").forward(request, response);
+
+                    break;
+
+                case "Sacar":
+                    String cantidadsal = request.getParameter("txtCantidadSal");
+
+                    if (cantidadsal.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Salidas> lista_sal3 = salDAO.listar();
+                        request.setAttribute("salidas_sanlorenzo", lista_sal3);
+                        List<Sacar> lista_sacar22 = ssanlorenzoDAO.listarSacar();
+                        request.setAttribute("sacar_sanlorenzo", lista_sacar22);
+                        request.getRequestDispatcher("ReporteSalidas/SalidasSanLorenzo.jsp").forward(request, response);
+                    } else {
+
+                        int idsal = Integer.parseInt(request.getParameter("txtIdSal"));
+                        Salidas s = salDAO.listarIdSal(idsal);
+
+                        //String plantasal = request.getParameter("plantauserfinalsalcont");
+                        String plantasal = "San Lorenzo";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+
+                        sacsanlorenzo.setDodigo(s.getCodigo());
+                        sacsanlorenzo.setDescripcion(s.getDescripcion());
+                        sacsanlorenzo.setUnidad(s.getUnidad());
+                        sacsanlorenzo.setCantidad(cantidadsal);
+                        sacsanlorenzo.setFecha(timeStamp);
+                        sacsanlorenzo.setPlanta(plantasal);
+                        ssanlorenzoDAO.agregarsacar(sacsanlorenzo);
+                        //request.setAttribute("sacar", s);
+
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+                        request.getRequestDispatcher("ControladorSalidas?menu=SalidasSanLorenzo&accion=ListarSanLorenzo").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("SalidasSanAndres")) {
+            switch (accion) {
+                case "ListarGeneralSanAndres":
+                    List<Salidas> lista_sal = salDAO.listar();
+                    request.setAttribute("salidas_sanandres", lista_sal);
+                    ssanandresDAO.deletesacarT();
+                    //List<Sacar> lista_sacar = ssanandresDAO.listarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasSanAndres.jsp").forward(request, response);
+                    break;
+                case "ListarSanAndres":
+                    List<Salidas> lista_sal2 = salDAO.listar();
+                    request.setAttribute("salidas_sanandres", lista_sal2);
+                    List<Sacar> lista_sacar = ssanandresDAO.listarSacar();
+                    request.setAttribute("sacar_sanandres", lista_sacar);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasSanAndres.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Salidas> lista3 = salDAO.buscarT(dato);
+
+                    List<Sacar> lista_sacar2 = ssanandresDAO.listarSacar();
+                    request.setAttribute("sacar_sanandres", lista_sacar2);
+
+                    request.setAttribute("salidas_sanandres", lista3);
+                    request.getRequestDispatcher("ReporteSalidas/SalidasSanAndres.jsp").forward(request, response);
+                    break;
+                case "EliminarSanAndres":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    ssanandresDAO.deletesacar(ide);
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasSanAndres&accion=ListarSanAndres").forward(request, response);
+                    break;
+                case "Generar Salida":
+
+                    String justificacion = request.getParameter("txtTotal");
+                    ssanandresDAO.actualizarsacarjustificaicon(justificacion);
+                    //Ingresa datos a la tabla total salidas san andres y actualiza las salidas totales
+                    tDAO.actualizartotalsalidascodigo_sanandres();
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_andres();
+                    tDAO.delete_saldos_andres_detallado();
+                    tDAO.delete_saldos_andres_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_sanandres();
+                    tDAO.enviar_datos_salidas_sanandres();
+                    //resumen saldos
+                    tDAO.saldos_resumen_sanandres();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_sanandres();
+                    
+                    request.getRequestDispatcher("ControladorSalidas?menu=SalidasSanAndres&accion=ListarGeneralSanAndres").forward(request, response);
+
+                    break;
+
+                case "Sacar":
+                    String cantidadsal = request.getParameter("txtCantidadSal");
+
+                    if (cantidadsal.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Salidas> lista_sal3 = salDAO.listar();
+                        request.setAttribute("salidas_sanandres", lista_sal3);
+                        List<Sacar> lista_sacar22 = ssanandresDAO.listarSacar();
+                        request.setAttribute("sacar_sanandres", lista_sacar22);
+                        request.getRequestDispatcher("ReporteSalidas/SalidasSanAndres.jsp").forward(request, response);
+                    } else {
+
+                        int idsal = Integer.parseInt(request.getParameter("txtIdSal"));
+                        Salidas s = salDAO.listarIdSal(idsal);
+
+                        //String plantasal = request.getParameter("plantauserfinalsalcont");
+                        String plantasal = "San Andres";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+
+                        sacsanandres.setDodigo(s.getCodigo());
+                        sacsanandres.setDescripcion(s.getDescripcion());
+                        sacsanandres.setUnidad(s.getUnidad());
+                        sacsanandres.setCantidad(cantidadsal);
+                        sacsanandres.setFecha(timeStamp);
+                        sacsanandres.setPlanta(plantasal);
+                        ssanandresDAO.agregarsacar(sacsanandres);
+                        //request.setAttribute("sacar", s);
+
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+                        request.getRequestDispatcher("ControladorSalidas?menu=SalidasSanAndres&accion=ListarSanAndres").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+    }
+
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
