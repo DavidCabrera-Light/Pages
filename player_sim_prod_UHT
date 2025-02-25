@@ -1,0 +1,76 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+
+<html lang="es">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--        <link href="css/bootstrap-4-navbar.css" rel="stylesheet" type="text/css"/>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">-->
+        <link href="css/player_sim_prod_uht.css" rel="stylesheet" type="text/css"/>
+        <title>Player Simulador Produccion UHT</title>
+        <!--        <link rel="stylesheet" href="styles.css">-->
+        <!--        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">-->
+    </head>
+
+    <body class="background">
+
+        <div class="container">
+            <div class="left-container">
+                <div class="box" onclick="mostrarEstacion(1)">
+                    Estación 1
+                </div>
+                <div class="box" onclick="mostrarEstacion(2)">
+                    Estación 2
+                </div>
+                <div class="box" onclick="mostrarEstacion(3)">
+                    Estación 3
+                </div>
+                <div class="box" onclick="mostrarEstacion(4)">
+                    Estación 4
+                </div>
+                <div class="box" onclick="mostrarEstacion(5)">
+                    Estación 5
+                </div>
+            </div>
+            <div class="middle-container" id="middle-container">
+                <div class="title_area_produccion">BIENVENIDOS AL ÁREA DE PRODUCCIÓN</div>
+                <div class="flex-item" id="block">
+                    <label class="switch">
+                        <input type="checkbox" id="switch" onchange="toggleSwitch()">
+                        <span class="slider"></span>
+                    </label>
+
+                    <div class="contenedor">
+                        <img src="img/seguridad_industrial.jpg" alt="Operador Estático" class="persona" id="persona-img">
+                        <div id="progress-container" class="progress-container">
+                            <div id="progress-bar" class="progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="image-text">SELECCIONE UNA ESTACION</div>
+
+                    <div class="buttons-container">
+                        <button onclick="producir()" id="producir-btn" disabled>Producir</button>
+                        <button onclick="configurar()" id="configurar-btn" disabled>Configurar</button>
+                        <button onclick="analizar()" id="analizar-btn" disabled>Analizar</button>
+                    </div>
+                </div>
+            </div>
+            
+                <div class="right-total">
+                    <h2 class="titleProd" id="titleProd">Configuración de Estación</h2>
+                    <div class="right-container" id="right-container">
+                        SELECCIONE UNA ESTACIÓN DE PRODUCCIÓN LINEA UHT
+                    </div>
+      
+        </div>
+    </div>
+    <script src="scripts/ajuste_pantallas.js" type="text/javascript"></script>
+    <script src="scripts/switch.js" type="text/javascript"></script>  
+    <script src="scripts/estaciones.js" type="text/javascript"></script>
+    <script src="scripts/transicion.js" type="text/javascript"></script>
+
+</body>
+</html>
