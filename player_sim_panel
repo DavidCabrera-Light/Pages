@@ -1,0 +1,1537 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        <link href="css/estilos_2.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap-4-navbar.css" rel="stylesheet" type="text/css"/>
+        <link href="css/flex.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bordesdesplegables.css" rel="stylesheet" type="text/css"/>
+        <link href="css/simular.css" rel="stylesheet" type="text/css"/>
+        <link href="css/modals_player.css" rel="stylesheet" type="text/css"/>
+        <title>Player Simulador Panel</title>
+    </head>
+    <body background = "img/Portada.jpg">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item">
+                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="Controlador?menu=IngresosAchacachi&accion=ListarGeneralAchacachi&Iduser=${usuario.getId()}" target="myFrame">INICIO</a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="Controlador?menu=IngresosAchacachi&accion=ListarGeneralAchacachi&Iduser=${usuario.getId()}" target="myFrame">Usuarios</a>
+                    </li>s
+                    <li class="nav-item">
+                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="ControladorSalidas?menu=SalidasAchacachi&accion=ListarGeneralAchacachi" target="myFrame">Escenarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="ControladorSalidas?menu=SalidasAchacachi&accion=ListarGeneralAchacachi" target="myFrame">Ranking</a>
+                    </li>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    REPORTES
+                                </a> 
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-item">
+                                        <a class="btn btn-danger" href="Controlador?menu=Reporte_Ingresos_Achacachi&accion=Listar" target="myFrame">Ingresos</a>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <a class="btn btn-danger" href="Controlador?menu=Reporte_Salidas_Achacachi&accion=Listar" target="myFrame">Salidas</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </ul>
+                <div class="dropdown">
+                    <button style="border: none" class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        ${usuario.getNom()}
+                    </button>
+                    <div class="dropdown-menu text-center" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">
+                            <img src="img/imagen3.jpg" alt="160" width="160"/>
+                        </a>
+                        <a class="dropdown-item" href="#" name="user">${user}</a>
+                        <a class="dropdown-item" href="#" name="planta">${plantauser}</a>
+                        <div class="dropdown-divider"></div>
+                        <form action="Validar" method="POST">
+                            <button name="accion" value="Salir" class="dropdown-item" href="#">Salir</Button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+        <div class="m-4" style="height: 50px">
+            BIENVENIDO USUARIO: ${usuario.getNom()}
+            <iframe name="myFrame" style="height: 100%; width: 100%; border: none"></iframe>
+        </div>
+
+        <div class="produccion-container">
+            <h1>PRODUCCIÓN</h1>
+
+            <div id="flex-container">
+
+
+                <!-- Contenedor 1 -->
+                <div class="flex-container-line" id="linea1">
+                    <h2 class="linea-title" onclick="toggleLine(1)"> LINEA DE UHT</h2>
+                    <div class="linea-content" id="contenedor1">
+                        <!-- Bloques para el contenedor 1 -->
+                        <div class="flex-item" id="block1">
+                            <label class="switch">
+                                <input type="checkbox" id="switch1" onchange="toggleBlock(1, 1)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage1" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 1</div>
+                            <div id="progress-container1">
+                                <div id="progress-bar1"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(1)">Producir</button>
+                                <button onclick="configurar(1)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block2">
+                            <label class="switch">
+                                <input type="checkbox" id="switch2" onchange="toggleBlock(2, 1)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage2" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 2</div>
+                            <div id="progress-container2">
+                                <div id="progress-bar2"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(2)">Producir</button>
+                                <button onclick="configurar(2)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block3">
+                            <label class="switch">
+                                <input type="checkbox" id="switch3" onchange="toggleBlock(3, 1)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage3" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 3</div>
+                            <div id="progress-container3">
+                                <div id="progress-bar3"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(3)">Producir</button>
+                                <button onclick="configurar(3)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block4">
+                            <label class="switch">
+                                <input type="checkbox" id="switch4" onchange="toggleBlock(4, 1)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage4" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 4</div>
+                            <div id="progress-container4">
+                                <div id="progress-bar4"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(4)">Producir</button>
+                                <button onclick="configurar(4)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block5">
+                            <label class="switch">
+                                <input type="checkbox" id="switch5" onchange="toggleBlock(5, 1)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage5" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 5</div>
+                            <div id="progress-container5">
+                                <div id="progress-bar5"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(5)">Producir</button>
+                                <button onclick="configurar(5)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 2 -->
+                <div class="flex-container-line" id="linea2">
+                    <h2 class="linea-title" onclick="toggleLine(2)">LINEA DE FERMENTADOS</h2>
+                    <div class="linea-content" id="contenedor2">
+                        <!-- Bloques para el contenedor 2 -->
+                        <div class="flex-item" id="block6">
+                            <label class="switch">
+                                <input type="checkbox" id="switch6" onchange="toggleBlock(6, 2)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage6" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 6</div>
+                            <div id="progress-container6">
+                                <div id="progress-bar6"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(6)">Producir</button>
+                                <button onclick="configurar(6)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block7">
+                            <label class="switch">
+                                <input type="checkbox" id="switch7" onchange="toggleBlock(7, 2)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage7" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 7</div>
+                            <div id="progress-container7">
+                                <div id="progress-bar7"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(7)">Producir</button>
+                                <button onclick="configurar(7)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block8">
+                            <label class="switch">
+                                <input type="checkbox" id="switch8" onchange="toggleBlock(8, 2)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage8" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 8</div>
+                            <div id="progress-container8">
+                                <div id="progress-bar8"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(8)">Producir</button>
+                                <button onclick="configurar(8)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block9">
+                            <label class="switch">
+                                <input type="checkbox" id="switch9" onchange="toggleBlock(9, 2)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage9" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 9</div>
+                            <div id="progress-container9">
+                                <div id="progress-bar9"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(9)">Producir</button>
+                                <button onclick="configurar(9)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block10">
+                            <label class="switch">
+                                <input type="checkbox" id="switch10" onchange="toggleBlock(10, 2)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage10" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 10</div>
+                            <div id="progress-container10">
+                                <div id="progress-bar10"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(10)">Producir</button>
+                                <button onclick="configurar(10)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 3 -->
+                <div class="flex-container-line" id="linea3">
+                    <h2 class="linea-title" onclick="toggleLine(3)">LINEA DE QUESOS</h2>
+                    <div class="linea-content" id="contenedor3">
+                        <!-- Bloques para el contenedor 3 -->
+                        <div class="flex-item" id="block11">
+                            <label class="switch">
+                                <input type="checkbox" id="switch11" onchange="toggleBlock(11, 3)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage11" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 11</div>
+                            <div id="progress-container11">
+                                <div id="progress-bar11"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(11)">Producir</button>
+                                <button onclick="configurar(11)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block12">
+                            <label class="switch">
+                                <input type="checkbox" id="switch12" onchange="toggleBlock(12, 3)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage12" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 12</div>
+                            <div id="progress-container12">
+                                <div id="progress-bar12"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(12)">Producir</button>
+                                <button onclick="configurar(12)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block13">
+                            <label class="switch">
+                                <input type="checkbox" id="switch13" onchange="toggleBlock(13, 3)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage13" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 13</div>
+                            <div id="progress-container13">
+                                <div id="progress-bar13"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(13)">Producir</button>
+                                <button onclick="configurar(13)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block14">
+                            <label class="switch">
+                                <input type="checkbox" id="switch14" onchange="toggleBlock(14, 3)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage14" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 14</div>
+                            <div id="progress-container14">
+                                <div id="progress-bar14"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(14)">Producir</button>
+                                <button onclick="configurar(14)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block15">
+                            <label class="switch">
+                                <input type="checkbox" id="switch15" onchange="toggleBlock(15, 3)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage15" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 15</div>
+                            <div id="progress-container15">
+                                <div id="progress-bar15"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(15)">Producir</button>
+                                <button onclick="configurar(15)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="produccion-container">
+            <h1>LOGISTICA</h1>
+
+            <div id="flex-container">
+                <!-- Contenedor 1 -->
+                <div class="flex-container-line" id="linea4">
+                    <h2 class="linea-title" onclick="toggleLine(4)">APROVISIONAMIENTO</h2>
+                    <div class="linea-content" id="contenedor4">
+                        <!-- Bloques para el contenedor 1 -->
+                        <div class="flex-item" id="block16">
+                            <label class="switch">
+                                <input type="checkbox" id="switch16" onchange="toggleBlock(16, 4)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage16" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 1</div>
+                            <div id="progress-container16">
+                                <div id="progress-bar16"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(16)">Producir</button>
+                                <button onclick="configurar(16)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block17">
+                            <label class="switch">
+                                <input type="checkbox" id="switch17" onchange="toggleBlock(17, 4)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage17" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 2</div>
+                            <div id="progress-container17">
+                                <div id="progress-bar17"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(17)">Producir</button>
+                                <button onclick="configurar(17)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block18">
+                            <label class="switch">
+                                <input type="checkbox" id="switch18" onchange="toggleBlock(18, 4)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage18" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 3</div>
+                            <div id="progress-container18">
+                                <div id="progress-bar18"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(18)">Producir</button>
+                                <button onclick="configurar(18)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block19">
+                            <label class="switch">
+                                <input type="checkbox" id="switch19" onchange="toggleBlock(19, 4)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage19" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 4</div>
+                            <div id="progress-container19">
+                                <div id="progress-bar19"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(19)">Producir</button>
+                                <button onclick="configurar(19)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block20">
+                            <label class="switch">
+                                <input type="checkbox" id="switch20" onchange="toggleBlock(20, 4)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage20" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 5</div>
+                            <div id="progress-container20">
+                                <div id="progress-bar20"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(20)">Producir</button>
+                                <button onclick="configurar(20)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 2 -->
+                <div class="flex-container-line" id="linea5">
+                    <h2 class="linea-title" onclick="toggleLine(5)">DISTRIBUCION</h2>
+                    <div class="linea-content" id="contenedor5">
+                        <!-- Bloques para el contenedor 2 -->
+                        <div class="flex-item" id="block21">
+                            <label class="switch">
+                                <input type="checkbox" id="switch21" onchange="toggleBlock(21, 5)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage21" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 6</div>
+                            <div id="progress-container21">
+                                <div id="progress-bar21"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(21)">Producir</button>
+                                <button onclick="configurar(21)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block22">
+                            <label class="switch">
+                                <input type="checkbox" id="switch22" onchange="toggleBlock(22, 5)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage22" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 7</div>
+                            <div id="progress-container22">
+                                <div id="progress-bar22"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(22)">Producir</button>
+                                <button onclick="configurar(22)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block23">
+                            <label class="switch">
+                                <input type="checkbox" id="switch23" onchange="toggleBlock(23, 5)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage23" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 8</div>
+                            <div id="progress-container23">
+                                <div id="progress-bar23"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(23)">Producir</button>
+                                <button onclick="configurar(23)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block24">
+                            <label class="switch">
+                                <input type="checkbox" id="switch24" onchange="toggleBlock(24, 5)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage24" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 9</div>
+                            <div id="progress-container24">
+                                <div id="progress-bar24"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(24)">Producir</button>
+                                <button onclick="configurar(24)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block25">
+                            <label class="switch">
+                                <input type="checkbox" id="switch25" onchange="toggleBlock(25, 5)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage25" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 10</div>
+                            <div id="progress-container25">
+                                <div id="progress-bar25"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(25)">Producir</button>
+                                <button onclick="configurar(25)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 3 -->
+                <div class="flex-container-line" id="linea6">
+                    <h2 class="linea-title" onclick="toggleLine(6)">ALMACENES</h2>
+                    <div class="linea-content" id="contenedor6">
+                        <!-- Bloques para el contenedor 3 -->
+                        <div class="flex-item" id="block26">
+                            <label class="switch">
+                                <input type="checkbox" id="switch26" onchange="toggleBlock(26, 6)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage26" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 11</div>
+                            <div id="progress-container26">
+                                <div id="progress-bar26"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(26)">Producir</button>
+                                <button onclick="configurar(26)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block27">
+                            <label class="switch">
+                                <input type="checkbox" id="switch27" onchange="toggleBlock(27, 6)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage27" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 12</div>
+                            <div id="progress-container27">
+                                <div id="progress-bar27"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(27)">Producir</button>
+                                <button onclick="configurar(27)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block28">
+                            <label class="switch">
+                                <input type="checkbox" id="switch28" onchange="toggleBlock(28, 6)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage28" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 13</div>
+                            <div id="progress-container28">
+                                <div id="progress-bar28"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(28)">Producir</button>
+                                <button onclick="configurar(28)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block29">
+                            <label class="switch">
+                                <input type="checkbox" id="switch29" onchange="toggleBlock(29, 6)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage29" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 14</div>
+                            <div id="progress-container29">
+                                <div id="progress-bar29"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(29">Producir</button>
+                                <button onclick="configurar(29)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block30">
+                            <label class="switch">
+                                <input type="checkbox" id="switch30" onchange="toggleBlock(30, 6)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage30" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 15</div>
+                            <div id="progress-container30">
+                                <div id="progress-bar30"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(30)">Producir</button>
+                                <button onclick="configurar(30)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="produccion-container">
+            <h1>CALIDAD</h1>
+
+            <div id="flex-container">
+                <!-- Contenedor 1 -->
+                <div class="flex-container-line" id="linea7">
+                    <h2 class="linea-title" onclick="toggleLine(7)">PLANES DE MUESTREO</h2>
+                    <div class="linea-content" id="contenedor7">
+                        <!-- Bloques para el contenedor 1 -->
+                        <div class="flex-item" id="block31">
+                            <label class="switch">
+                                <input type="checkbox" id="switch31" onchange="toggleBlock(31, 7)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage311" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 1</div>
+                            <div id="progress-container311">
+                                <div id="progress-bar311"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(31)">Producir</button>
+                                <button onclick="configurar(31)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block32">
+                            <label class="switch">
+                                <input type="checkbox" id="switch32" onchange="toggleBlock(32, 7)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage32" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 2</div>
+                            <div id="progress-container32">
+                                <div id="progress-bar32"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(32)">Producir</button>
+                                <button onclick="configurar(32)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block33">
+                            <label class="switch">
+                                <input type="checkbox" id="switch33" onchange="toggleBlock(33, 7)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage33" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 3</div>
+                            <div id="progress-container333">
+                                <div id="progress-bar3"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(33)">Producir</button>
+                                <button onclick="configurar(33)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block34">
+                            <label class="switch">
+                                <input type="checkbox" id="switch34" onchange="toggleBlock(34, 7)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage34" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 4</div>
+                            <div id="progress-container34">
+                                <div id="progress-bar34"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(34)">Producir</button>
+                                <button onclick="configurar(34)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block35">
+                            <label class="switch">
+                                <input type="checkbox" id="switch35" onchange="toggleBlock(35, 7)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage35" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 5</div>
+                            <div id="progress-container35">
+                                <div id="progress-bar35"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(35)">Producir</button>
+                                <button onclick="configurar(35)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 2 -->
+                <div class="flex-container-line" id="linea8">
+                    <h2 class="linea-title" onclick="toggleLine(8)">POLITICAS DE CALIDAD</h2>
+                    <div class="linea-content" id="contenedor8">
+                        <!-- Bloques para el contenedor 2 -->
+                        <div class="flex-item" id="block36">
+                            <label class="switch">
+                                <input type="checkbox" id="switch36" onchange="toggleBlock(36, 8)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage36" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 6</div>
+                            <div id="progress-container36">
+                                <div id="progress-bar36"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(36)">Producir</button>
+                                <button onclick="configurar(36)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block37">
+                            <label class="switch">
+                                <input type="checkbox" id="switch37" onchange="toggleBlock(37, 8)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage37" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 7</div>
+                            <div id="progress-container37">
+                                <div id="progress-bar37"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(37)">Producir</button>
+                                <button onclick="configurar(37)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block38">
+                            <label class="switch">
+                                <input type="checkbox" id="switch38" onchange="toggleBlock(38, 8)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage38" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 8</div>
+                            <div id="progress-container38">
+                                <div id="progress-bar38"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(38)">Producir</button>
+                                <button onclick="configurar(38)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block39">
+                            <label class="switch">
+                                <input type="checkbox" id="switch39" onchange="toggleBlock(39, 8)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage39" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 9</div>
+                            <div id="progress-container39">
+                                <div id="progress-bar39"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(39)">Producir</button>
+                                <button onclick="configurar(39)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block40">
+                            <label class="switch">
+                                <input type="checkbox" id="switch40" onchange="toggleBlock(40, 8)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage40" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 10</div>
+                            <div id="progress-container40">
+                                <div id="progress-bar40"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(40)">Producir</button>
+                                <button onclick="configurar(40)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 3 -->
+                <div class="flex-container-line" id="linea9">
+                    <h2 class="linea-title" onclick="toggleLine(9)">LABORATORIO</h2>
+                    <div class="linea-content" id="contenedor9">
+                        <!-- Bloques para el contenedor 3 -->
+                        <div class="flex-item" id="block41">
+                            <label class="switch">
+                                <input type="checkbox" id="switch41" onchange="toggleBlock(41, 9)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage41" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 11</div>
+                            <div id="progress-container41">
+                                <div id="progress-bar41"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(41)">Producir</button>
+                                <button onclick="configurar(41)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block42">
+                            <label class="switch">
+                                <input type="checkbox" id="switch42" onchange="toggleBlock(42, 9)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage42" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 12</div>
+                            <div id="progress-container42">
+                                <div id="progress-bar42"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(42)">Producir</button>
+                                <button onclick="configurar(42)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block43">
+                            <label class="switch">
+                                <input type="checkbox" id="switch43" onchange="toggleBlock(43, 9)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage43" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 13</div>
+                            <div id="progress-container43">
+                                <div id="progress-bar43"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(43)">Producir</button>
+                                <button onclick="configurar(43)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block44">
+                            <label class="switch">
+                                <input type="checkbox" id="switch44" onchange="toggleBlock(44, 9)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage44" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 14</div>
+                            <div id="progress-container44">
+                                <div id="progress-bar44"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(44)">Producir</button>
+                                <button onclick="configurar(44)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block45">
+                            <label class="switch">
+                                <input type="checkbox" id="switch45" onchange="toggleBlock(45, 9)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage45" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 15</div>
+                            <div id="progress-container45">
+                                <div id="progress-bar45"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(45)">Producir</button>
+                                <button onclick="configurar(45)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="produccion-container">
+            <h1>MANTENIMIENTO</h1>
+
+            <div id="flex-container">
+                <!-- Contenedor 1 -->
+                <div class="flex-container-line" id="linea10">
+                    <h2 class="linea-title" onclick="toggleLine(10)">PROGRAMACION DE MANTENIMIENTO</h2>
+                    <div class="linea-content" id="contenedor10">
+                        <!-- Bloques para el contenedor 1 -->
+                        <div class="flex-item" id="block46">
+                            <label class="switch">
+                                <input type="checkbox" id="switch46" onchange="toggleBlock(46, 10)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage46" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 1</div>
+                            <div id="progress-container46">
+                                <div id="progress-bar46"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(46)">Producir</button>
+                                <button onclick="configurar(46)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block47">
+                            <label class="switch">
+                                <input type="checkbox" id="switch47" onchange="toggleBlock(47, 10)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage47" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 2</div>
+                            <div id="progress-container47">
+                                <div id="progress-bar47"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(47)">Producir</button>
+                                <button onclick="configurar(47)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block48">
+                            <label class="switch">
+                                <input type="checkbox" id="switch48" onchange="toggleBlock(48, 10)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage48" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 3</div>
+                            <div id="progress-container48">
+                                <div id="progress-bar48"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(48)">Producir</button>
+                                <button onclick="configurar(48)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block49">
+                            <label class="switch">
+                                <input type="checkbox" id="switch49" onchange="toggleBlock(49, 10)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage49" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 4</div>
+                            <div id="progress-container49">
+                                <div id="progress-bar49"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(49)">Producir</button>
+                                <button onclick="configurar(49)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block50">
+                            <label class="switch">
+                                <input type="checkbox" id="switch50" onchange="toggleBlock(50, 10)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage50" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 5</div>
+                            <div id="progress-container50">
+                                <div id="progress-bar50"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(50)">Producir</button>
+                                <button onclick="configurar(50)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 2 -->
+                <div class="flex-container-line" id="linea11">
+                    <h2 class="linea-title" onclick="toggleLine(11)">GESTION DE MAQUINARIA Y EQUIPOS</h2>
+                    <div class="linea-content" id="contenedor11">
+                        <!-- Bloques para el contenedor 2 -->
+                        <div class="flex-item" id="block51">
+                            <label class="switch">
+                                <input type="checkbox" id="switch51" onchange="toggleBlock(51, 11)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage51" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 6</div>
+                            <div id="progress-container51">
+                                <div id="progress-bar51"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(51)">Producir</button>
+                                <button onclick="configurar(51)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block52">
+                            <label class="switch">
+                                <input type="checkbox" id="switch52" onchange="toggleBlock(52, 11)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage52" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 7</div>
+                            <div id="progress-container52">
+                                <div id="progress-bar52"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(52)">Producir</button>
+                                <button onclick="configurar(52)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block53">
+                            <label class="switch">
+                                <input type="checkbox" id="switch53" onchange="toggleBlock(53, 11)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage53" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 8</div>
+                            <div id="progress-container53">
+                                <div id="progress-bar53"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(53)">Producir</button>
+                                <button onclick="configurar(53)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block54">
+                            <label class="switch">
+                                <input type="checkbox" id="switch54" onchange="toggleBlock(54, 11)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage54" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 9</div>
+                            <div id="progress-container54">
+                                <div id="progress-bar54"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(54)">Producir</button>
+                                <button onclick="configurar(54)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block55">
+                            <label class="switch">
+                                <input type="checkbox" id="switch55" onchange="toggleBlock(55, 11)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage55" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 10</div>
+                            <div id="progress-container55">
+                                <div id="progress-bar55"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(55)">Producir</button>
+                                <button onclick="configurar(55)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 3 -->
+                <div class="flex-container-line" id="linea12">
+                    <h2 class="linea-title" onclick="toggleLine(12)">ALMACEN DE REPUESTOS</h2>
+                    <div class="linea-content" id="contenedor12">
+                        <!-- Bloques para el contenedor 3 -->
+                        <div class="flex-item" id="block56">
+                            <label class="switch">
+                                <input type="checkbox" id="switch56" onchange="toggleBlock(56, 12)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage56" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 11</div>
+                            <div id="progress-container56">
+                                <div id="progress-bar56"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(56)">Producir</button>
+                                <button onclick="configurar(56)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block57">
+                            <label class="switch">
+                                <input type="checkbox" id="switch57" onchange="toggleBlock(57, 12)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage57" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 12</div>
+                            <div id="progress-container57">
+                                <div id="progress-bar57"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(57)">Producir</button>
+                                <button onclick="configurar(57)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block58">
+                            <label class="switch">
+                                <input type="checkbox" id="switch58" onchange="toggleBlock(58, 12)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage58" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 13</div>
+                            <div id="progress-container58">
+                                <div id="progress-bar58"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(58)">Producir</button>
+                                <button onclick="configurar(58)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block59">
+                            <label class="switch">
+                                <input type="checkbox" id="switch59" onchange="toggleBlock(59, 12)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage59" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 14</div>
+                            <div id="progress-container59">
+                                <div id="progress-bar59"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(59)">Producir</button>
+                                <button onclick="configurar(59)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block60">
+                            <label class="switch">
+                                <input type="checkbox" id="switch60" onchange="toggleBlock(60, 12)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage60" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 15</div>
+                            <div id="progress-container60">
+                                <div id="progress-bar60"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(60)">Producir</button>
+                                <button onclick="configurar(60)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="produccion-container">
+            <h1>VENTAS Y MERCADEO</h1>
+
+            <div id="flex-container">
+                <!-- Contenedor 1 -->
+                <div class="flex-container-line" id="linea13">
+                    <h2 class="linea-title" onclick="toggleLine(13)">MARKETING</h2>
+                    <div class="linea-content" id="contenedor13">
+                        <!-- Bloques para el contenedor 1 -->
+                        <div class="flex-item" id="block61">
+                            <label class="switch">
+                                <input type="checkbox" id="switch61" onchange="toggleBlock(61, 13)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage61" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 1</div>
+                            <div id="progress-container61">
+                                <div id="progress-bar61"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(61)">Producir</button>
+                                <button onclick="configurar(61)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block62">
+                            <label class="switch">
+                                <input type="checkbox" id="switch62" onchange="toggleBlock(62, 13)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage62" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 2</div>
+                            <div id="progress-container62">
+                                <div id="progress-bar62"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(62)">Producir</button>
+                                <button onclick="configurar(62)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block63">
+                            <label class="switch">
+                                <input type="checkbox" id="switch63" onchange="toggleBlock(63, 13)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage63" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 3</div>
+                            <div id="progress-container63">
+                                <div id="progress-bar63"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(63)">Producir</button>
+                                <button onclick="configurar(63)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block64">
+                            <label class="switch">
+                                <input type="checkbox" id="switch64" onchange="toggleBlock(64, 13)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage64" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 4</div>
+                            <div id="progress-container64">
+                                <div id="progress-bar64"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(64)">Producir</button>
+                                <button onclick="configurar(64)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block65">
+                            <label class="switch">
+                                <input type="checkbox" id="switch65" onchange="toggleBlock(65, 13)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage65" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 5</div>
+                            <div id="progress-container65">
+                                <div id="progress-bar65"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(65)">Producir</button>
+                                <button onclick="configurar(65)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 2 -->
+                <div class="flex-container-line" id="linea14">
+                    <h2 class="linea-title" onclick="toggleLine(14)">GESTION DE CLIENTES ESTRATEGICOS</h2>
+                    <div class="linea-content" id="contenedor14">
+                        <!-- Bloques para el contenedor 2 -->
+                        <div class="flex-item" id="block66">
+                            <label class="switch">
+                                <input type="checkbox" id="switch66" onchange="toggleBlock(66, 14)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage66" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 6</div>
+                            <div id="progress-container66">
+                                <div id="progress-bar66"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(66)">Producir</button>
+                                <button onclick="configurar(66)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block67">
+                            <label class="switch">
+                                <input type="checkbox" id="switch67" onchange="toggleBlock(67, 14)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage67" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 7</div>
+                            <div id="progress-container67">
+                                <div id="progress-bar67"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(67)">Producir</button>
+                                <button onclick="configurar(67)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block68">
+                            <label class="switch">
+                                <input type="checkbox" id="switch68" onchange="toggleBlock(68, 14)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage68" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 8</div>
+                            <div id="progress-container68">
+                                <div id="progress-bar68"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(68)">Producir</button>
+                                <button onclick="configurar(68)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block69">
+                            <label class="switch">
+                                <input type="checkbox" id="switch69" onchange="toggleBlock(69, 14)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage69" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 9</div>
+                            <div id="progress-container69">
+                                <div id="progress-bar69"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(69)">Producir</button>
+                                <button onclick="configurar(69)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block70">
+                            <label class="switch">
+                                <input type="checkbox" id="switch70" onchange="toggleBlock(70, 14)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage70" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 10</div>
+                            <div id="progress-container70">
+                                <div id="progress-bar70"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(70)">Producir</button>
+                                <button onclick="configurar(70)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor 3 -->
+                <div class="flex-container-line" id="linea15">
+                    <h2 class="linea-title" onclick="toggleLine(15)">GESTION DE MERCADOS</h2>
+                    <div class="linea-content" id="contenedor15">
+                        <!-- Bloques para el contenedor 3 -->
+                        <div class="flex-item" id="block71">
+                            <label class="switch">
+                                <input type="checkbox" id="switch71" onchange="toggleBlock(71, 15)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage71" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 11</div>
+                            <div id="progress-container71">
+                                <div id="progress-bar71"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(71)">Producir</button>
+                                <button onclick="configurar(71)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block72">
+                            <label class="switch">
+                                <input type="checkbox" id="switch72" onchange="toggleBlock(72, 15)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage72" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 12</div>
+                            <div id="progress-container72">
+                                <div id="progress-bar72"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(72)">Producir</button>
+                                <button onclick="configurar(72)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block73">
+                            <label class="switch">
+                                <input type="checkbox" id="switch73" onchange="toggleBlock(73, 15)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage73" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 13</div>
+                            <div id="progress-container73">
+                                <div id="progress-bar73"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(73)">Producir</button>
+                                <button onclick="configurar(73)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block74">
+                            <label class="switch">
+                                <input type="checkbox" id="switch74" onchange="toggleBlock(74, 15)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage74" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 14</div>
+                            <div id="progress-container74">
+                                <div id="progress-bar74"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(74)">Producir</button>
+                                <button onclick="configurar(74)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                        <div class="flex-item" id="block75">
+                            <label class="switch">
+                                <input type="checkbox" id="switch75" onchange="toggleBlock(75, 15)">
+                                <span class="slider"></span>
+                            </label>
+                            <img id="parameterImage75" src="img/parameter.jpg" alt="Parameter Image">
+                            <div class="image-text">ESTACIÓN 15</div>
+                            <div id="progress-container75">
+                                <div id="progress-bar75"></div>
+                            </div>
+                            <div class="buttons-container">
+                                <button onclick="producir(75)">Producir</button>
+                                <button onclick="configurar(75)">Configurar</button>
+                                <button onclick="analizar()">Analizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--         Ventana Modal -->
+        <div id="configModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="cerrarModal()">&times;</span>
+                <h3>Configuración de Estación</h3>
+
+                <!--                         Formulario de configuración -->
+                <form id="configForm">
+                    <div class="modal-section">
+                        <!--                                 Sección: Mano de Obra -->
+                        <fieldset>
+                            <legend>Mano de Obra</legend>
+                            <div class="form-row">
+                                <label for="campo1">Campo 1:</label>
+                                <input type="text" id="campo1" name="campo1" required>
+                                <label for="campo2">Campo 2:</label>
+                                <input type="text" id="campo2" name="campo2" required>
+                                <label for="campo3">Campo 3:</label>
+                                <input type="text" id="campo3" name="campo3" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="campo4">Campo 4:</label>
+                                <input type="text" id="campo4" name="campo4" required>
+                                <label for="campo5">Campo 5:</label>
+                                <input type="text" id="campo5" name="campo5" required>
+                                <label for="campo6">Campo 6:</label>
+                                <input type="text" id="campo6" name="campo6" required>
+                            </div>
+                        </fieldset>
+
+                        <!--                                 Sección: Maquinaria -->
+                        <fieldset>
+                            <legend>Maquinaria</legend>
+                            <div class="form-row">
+                                <label for="campo7">Campo 1:</label>
+                                <input type="text" id="campo7" name="campo7" required>
+                                <label for="campo8">Campo 2:</label>
+                                <input type="text" id="campo8" name="campo8" required>
+                                <label for="campo9">Campo 3:</label>
+                                <input type="text" id="campo9" name="campo9" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="campo10">Campo 4:</label>
+                                <input type="text" id="campo10" name="campo10" required>
+                                <label for="campo11">Campo 5:</label>
+                                <input type="text" id="campo11" name="campo11" required>
+                                <label for="campo12">Campo 6:</label>
+                                <input type="text" id="campo12" name="campo12" required>
+                            </div>
+                        </fieldset>
+
+                        <!--                                 Sección: Programación de Turnos -->
+                        <fieldset>
+                            <legend>Programación de Turnos</legend>
+                            <div class="form-row">
+                                <label for="campo13">Campo 1:</label>
+                                <input type="text" id="campo13" name="campo13" required>
+                                <label for="campo14">Campo 2:</label>
+                                <input type="text" id="campo14" name="campo14" required>
+                                <label for="campo15">Campo 3:</label>
+                                <input type="text" id="campo15" name="campo15" required>
+                            </div>
+                            <div class="form-row">
+                                <label for="campo16">Campo 4:</label>
+                                <input type="text" id="campo16" name="campo16" required>
+                                <label for="campo17">Campo 5:</label>
+                                <input type="text" id="campo17" name="campo17" required>
+                                <label for="campo18">Campo 6:</label>
+                                <input type="text" id="campo18" name="campo18" required>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <!--                             Botones de acción -->
+                    <div class="modal-buttons">
+                        <button type="button" onclick="actualizar()">Actualizar</button>
+                        <button type="button" onclick="cerrarModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Container (oculto por defecto) -->
+        <div id="modalContainer"></div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+        <script src="scripts/bootstrap-4-navbar.js" type="text/javascript"></script>
+        <script src="scripts/simular.js" type="text/javascript"></script>
+        <script src="scripts/configurar_player.js" type="text/javascript"></script>
+
+        <script src="scripts/switch.js" type="text/javascript"></script>
+        
+    </body>
+</html>
