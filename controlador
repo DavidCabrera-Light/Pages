@@ -1,0 +1,2628 @@
+package Controlador;
+
+import Config.Conexion;
+import GUI.GenerarIngresoForm;
+import Modelo.Demanda;
+import Modelo.DemandaDAO;
+import Modelo.Estadisticos;
+import Modelo.Ingresar;
+import Modelo.IngresarDAO;
+import Modelo.Ingresos;
+import Modelo.IngresosDAO;
+import Modelo.ListaInsumos;
+import Modelo.ListaInsumosDAO;
+import Modelo.Salidas;
+import Modelo.SalidasDAO;
+import Modelo.Usuario;
+import Modelo.UsuarioDAO;
+import Modelo.PrevioIngreso;
+import Modelo.PrevioIngresosDAO;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.swing.JOptionPane;
+import Modelo.Sacar;
+import javax.swing.*;
+import Modelo.SacarDAO;
+import Modelo.SaldosAchacachi;
+import Modelo.SaldosAchacachiDAO;
+import Modelo.SaldosAchacachiOrdenado;
+import Modelo.SaldosAchacachiOrdenadoDAO;
+import Modelo.SaldosChallapata;
+import Modelo.SaldosChallapataDAO;
+import Modelo.SaldosChallapataOrdenado;
+import Modelo.SaldosChallapataOrdenadoDAO;
+import Modelo.SaldosIvirgarzama;
+import Modelo.SaldosIvirgarzamaDAO;
+import Modelo.SaldosIvirgarzamaOrdenado;
+import Modelo.SaldosIvirgarzamaOrdenadoDAO;
+import Modelo.SaldosSanAndres;
+import Modelo.SaldosSanAndresDAO;
+import Modelo.SaldosSanAndresOrdenado;
+import Modelo.SaldosSanAndresOrdenadoDAO;
+import Modelo.SaldosSanLorenzo;
+import Modelo.SaldosSanLorenzoDAO;
+import Modelo.SaldosSanLorenzoOrdenado;
+import Modelo.SaldosSanLorenzoOrdenadoDAO;
+import Modelo.SaldosTotales;
+import Modelo.SaldosTotalesDAO;
+import Modelo.SaldosTotalesOrdenado;
+import Modelo.SaldosTotalesOrdenadoDAO;
+import Modelo.TotalIngresosDAO;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import Modelo.TotalIngresosPageDAO;
+import Modelo.TotalIngresosPages;
+import Modelo.TotalSalidasDAO;
+import Modelo.TotalSalidasPage;
+import Modelo.TotalSalidasPageDAO;
+import Modelo.User;
+import Modelo.UserDAO;
+import java.awt.Color;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.AxisSpace;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.ui.RectangleInsets;
+
+import GUI.GenerarIngresoForm;
+import Modelo.ExportarPDF;
+import Modelo.IngresarAchacachi;
+import Modelo.IngresarAchacachiDAO;
+import Modelo.IngresarChallapata;
+import Modelo.IngresarChallapataDAO;
+import Modelo.IngresarIvirgarzama;
+import Modelo.IngresarIvirgarzamaDAO;
+import Modelo.IngresarSanAndres;
+import Modelo.IngresarSanAndresDAO;
+import Modelo.IngresarSanLorenzo;
+import Modelo.IngresarSanLorenzoDAO;
+import Modelo.PrevioIngresarAchacachi;
+import Modelo.PrevioIngresarAchacachiDAO;
+import Modelo.SacarAchacachi;
+import Modelo.SacarAchacachiDAO;
+import Modelo.SacarChallapata;
+import Modelo.SacarChallapataDAO;
+import Modelo.SacarIvirgarzama;
+import Modelo.SacarIvirgarzamaDAO;
+import Modelo.SacarSanAndres;
+import Modelo.SacarSanAndresDAO;
+import Modelo.SacarSanLorenzo;
+import Modelo.SacarSanLorenzoDAO;
+import Modelo.reporte_ingresos_achacachi;
+import Modelo.reporte_ingresos_achacachi_DAO;
+import Modelo.Reporte_Ingresos_Challapata;
+import Modelo.Reporte_Ingresos_Challapata_DAO;
+import Modelo.Reporte_Ingresos_Ivirgarzama;
+import Modelo.Reporte_Ingresos_Ivirgarzama_DAO;
+import Modelo.Reporte_Ingresos_SanAndres;
+import Modelo.Reporte_Ingresos_SanAndres_DAO;
+import Modelo.Reporte_Ingresos_SanLorenzo;
+import Modelo.Reporte_Ingresos_SanLorenzo_DAO;
+import Modelo.Reporte_Salidas_Achacachi;
+import Modelo.Reporte_Salidas_Achacachi_DAO;
+import Modelo.Reporte_salidas_challapata;
+import Modelo.Reporte_Salidas_Challapata_DAO;
+import Modelo.Reporte_Salidas_Ivirgarzama;
+import Modelo.Reporte_Salidas_Ivirgarzama_DAO;
+import Modelo.Reporte_Salidas_SanAndres;
+import Modelo.Reporte_Salidas_SanAndres_DAO;
+import Modelo.Reporte_Salidas_SanLorenzo;
+import Modelo.Reporte_Salidas_SanLorenzo_DAO;
+import java.awt.HeadlessException;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.servlet.http.HttpSession;
+
+/**
+ *
+ * @author David
+ */
+@MultipartConfig
+public class Controlador extends HttpServlet {
+
+    Conexion cn = new Conexion();
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
+
+    Usuario us = new Usuario();
+    UsuarioDAO udao = new UsuarioDAO();
+    Estadisticos estdao = new Estadisticos();
+    Demanda dem = new Demanda();
+    DemandaDAO demdao = new DemandaDAO();
+
+    Salidas sal = new Salidas();
+    SalidasDAO salDAO = new SalidasDAO();
+
+    Sacar sac = new Sacar();
+    SacarDAO sdao = new SacarDAO();
+
+    TotalSalidasDAO tDAO = new TotalSalidasDAO();
+
+    SacarAchacachi sacachacachi = new SacarAchacachi();
+    SacarAchacachiDAO sachacachiDAO = new SacarAchacachiDAO();
+    SacarChallapata sacchallapata = new SacarChallapata();
+    SacarChallapataDAO schallapataDAO = new SacarChallapataDAO();
+    SacarIvirgarzama sacivirgarzama = new SacarIvirgarzama();
+    SacarIvirgarzamaDAO sivirgarzamaDAO = new SacarIvirgarzamaDAO();
+    SacarSanLorenzo sacsanlorenzo = new SacarSanLorenzo();
+    SacarSanLorenzoDAO ssanlorenzoDAO = new SacarSanLorenzoDAO();
+    SacarSanAndres sacsanandres = new SacarSanAndres();
+    SacarSanAndresDAO ssanandresDAO = new SacarSanAndresDAO();
+
+    Ingresos ingr = new Ingresos();
+    IngresosDAO ingDAO = new IngresosDAO();
+
+    PrevioIngreso previoingreso = new PrevioIngreso();
+    PrevioIngresosDAO previoingresosDAO = new PrevioIngresosDAO();
+
+    Ingresar ingresar = new Ingresar();
+    IngresarDAO iDAO = new IngresarDAO();
+
+    TotalIngresosDAO tiDAO = new TotalIngresosDAO();
+
+    IngresarAchacachi ingresarachacachi = new IngresarAchacachi();
+    IngresarAchacachiDAO iachacachiDAO = new IngresarAchacachiDAO();
+    IngresarChallapata ingresarchallapata = new IngresarChallapata();
+    IngresarChallapataDAO ichallapataDAO = new IngresarChallapataDAO();
+    IngresarIvirgarzama ingresarivirgarzama = new IngresarIvirgarzama();
+    IngresarIvirgarzamaDAO iivirgarzamaDAO = new IngresarIvirgarzamaDAO();
+    IngresarSanLorenzo ingresarsanlorenzo = new IngresarSanLorenzo();
+    IngresarSanLorenzoDAO isanlorenzoDAO = new IngresarSanLorenzoDAO();
+    IngresarSanAndres ingresarsanandres = new IngresarSanAndres();
+    IngresarSanAndresDAO isanandresDAO = new IngresarSanAndresDAO();
+
+    PrevioIngresarAchacachi previoingresarachacachi = new PrevioIngresarAchacachi();
+    PrevioIngresarAchacachiDAO previoingresarachacachiDAO = new PrevioIngresarAchacachiDAO();
+
+    ListaInsumos listainsumos = new ListaInsumos();
+    ListaInsumosDAO listainsumosDAO = new ListaInsumosDAO();
+    TotalIngresosPages totalingresospage = new TotalIngresosPages();
+    TotalIngresosPageDAO totalingresospageDAO = new TotalIngresosPageDAO();
+
+    reporte_ingresos_achacachi reporteingresosachacachi = new reporte_ingresos_achacachi();
+    reporte_ingresos_achacachi_DAO reporteingresosachacachiDAO = new reporte_ingresos_achacachi_DAO();
+    Reporte_Ingresos_Challapata reporteingresoschallapata = new Reporte_Ingresos_Challapata();
+    Reporte_Ingresos_Challapata_DAO reporteingresoschallapataDAO = new Reporte_Ingresos_Challapata_DAO();
+    Reporte_Ingresos_Ivirgarzama reporteingresosivirgarzama = new Reporte_Ingresos_Ivirgarzama();
+    Reporte_Ingresos_Ivirgarzama_DAO reporteingresosivirgarzamaDAO = new Reporte_Ingresos_Ivirgarzama_DAO();
+    Reporte_Ingresos_SanAndres reporteingresossanandres = new Reporte_Ingresos_SanAndres();
+    Reporte_Ingresos_SanAndres_DAO reporteingresossanandresDAO = new Reporte_Ingresos_SanAndres_DAO();
+    Reporte_Ingresos_SanLorenzo reporteingresossanlorenzo = new Reporte_Ingresos_SanLorenzo();
+    Reporte_Ingresos_SanLorenzo_DAO reporteingresossanlorenzoDAO = new Reporte_Ingresos_SanLorenzo_DAO();
+
+    Reporte_Salidas_Achacachi reportesalidasachacachi = new Reporte_Salidas_Achacachi();
+    Reporte_Salidas_Achacachi_DAO reportesalidasachacachiDAO = new Reporte_Salidas_Achacachi_DAO();
+    Reporte_salidas_challapata reportesalidaschallapata = new Reporte_salidas_challapata();
+    Reporte_Salidas_Challapata_DAO reportesalidaschallapataDAO = new Reporte_Salidas_Challapata_DAO();
+    Reporte_Salidas_Ivirgarzama reportesalidasivirgarzama = new Reporte_Salidas_Ivirgarzama();
+    Reporte_Salidas_Ivirgarzama_DAO reportesalidasivirgarzamaDAO = new Reporte_Salidas_Ivirgarzama_DAO();
+    Reporte_Salidas_SanAndres reportesalidassanandres = new Reporte_Salidas_SanAndres();
+    Reporte_Salidas_SanAndres_DAO reportesalidassanandresDAO = new Reporte_Salidas_SanAndres_DAO();
+    Reporte_Salidas_SanLorenzo reportesalidassanlorenzo = new Reporte_Salidas_SanLorenzo();
+    Reporte_Salidas_SanLorenzo_DAO reportesalidassanlorenzoDAO = new Reporte_Salidas_SanLorenzo_DAO();
+
+    TotalSalidasPage totalsalidaspage = new TotalSalidasPage();
+    TotalSalidasPageDAO totalsalidapageDAO = new TotalSalidasPageDAO();
+
+    SaldosAchacachi saldosachacachi = new SaldosAchacachi();
+    SaldosAchacachiDAO saldosachacachiDAO = new SaldosAchacachiDAO();
+    SaldosChallapata saldoschallapata = new SaldosChallapata();
+    SaldosChallapataDAO saldoschallapataDAO = new SaldosChallapataDAO();
+    SaldosIvirgarzama saldosivirgarzama = new SaldosIvirgarzama();
+    SaldosIvirgarzamaDAO saldosivirgarzamaDAO = new SaldosIvirgarzamaDAO();
+    SaldosSanLorenzo saldossanlorenzo = new SaldosSanLorenzo();
+    SaldosSanLorenzoDAO saldossanlorenzoDAO = new SaldosSanLorenzoDAO();
+    SaldosSanAndres saldossanandres = new SaldosSanAndres();
+    SaldosSanAndresDAO saldossanandresDAO = new SaldosSanAndresDAO();
+    SaldosTotales saldostotales = new SaldosTotales();
+    SaldosTotalesDAO saldostotalesDAO = new SaldosTotalesDAO();
+
+    SaldosAchacachiOrdenado saldosachacachiordenado = new SaldosAchacachiOrdenado();
+    SaldosAchacachiOrdenadoDAO saldosachacachiordenadoDAO = new SaldosAchacachiOrdenadoDAO();
+    SaldosChallapataOrdenado saldoschallapataordenado = new SaldosChallapataOrdenado();
+    SaldosChallapataOrdenadoDAO saldoschallapataordenadoDAO = new SaldosChallapataOrdenadoDAO();
+    SaldosIvirgarzamaOrdenado saldosivirgarzamaordenado = new SaldosIvirgarzamaOrdenado();
+    SaldosIvirgarzamaOrdenadoDAO saldosivirgarzamaordenadoDAO = new SaldosIvirgarzamaOrdenadoDAO();
+    SaldosSanLorenzoOrdenado saldossanlorenzoordenado = new SaldosSanLorenzoOrdenado();
+    SaldosSanLorenzoOrdenadoDAO saldossanlorenzoordenadoDAO = new SaldosSanLorenzoOrdenadoDAO();
+    SaldosSanAndresOrdenado saldossanandresordenado = new SaldosSanAndresOrdenado();
+    SaldosSanAndresOrdenadoDAO saldossanandresordenadoDAO = new SaldosSanAndresOrdenadoDAO();
+    SaldosTotalesOrdenado saldostotalesordenado = new SaldosTotalesOrdenado();
+    SaldosTotalesOrdenadoDAO saldostotalesordenadoDAO = new SaldosTotalesOrdenadoDAO();
+
+    User u_planta = new User();
+    UserDAO u_plantaDAO = new UserDAO();
+
+    int ide;
+    int bool = 1;
+    int idesal;
+
+    String timeStamp = "";
+    //String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String menu = request.getParameter("menu");
+        String accion = request.getParameter("accion");
+        if (menu.equals("Principal")) {
+            request.getRequestDispatcher("Principales/Principal.jsp").forward(request, response);
+        }
+        if (menu.equals("Principal2")) {
+            request.getRequestDispatcher("Extras/Principal2.jsp").forward(request, response);
+        }
+        if (menu.equals("Principal_Achacachi")) {
+            request.getRequestDispatcher("Principales/Principal_Achacachi.jsp").forward(request, response);
+        }
+        if (menu.equals("Principal_Challapata")) {
+            request.getRequestDispatcher("Principales/Principal_Challapata.jsp").forward(request, response);
+        }
+        if (menu.equals("Principal_Ivirgarzama")) {
+            request.getRequestDispatcher("Principales/Principal_Ivirgarzama.jsp").forward(request, response);
+        }
+        if (menu.equals("Principal_SanLorenzo")) {
+            request.getRequestDispatcher("Principales/Principal_SanLorenzo.jsp").forward(request, response);
+        }
+        if (menu.equals("Principal_SanAndres")) {
+            request.getRequestDispatcher("Principales/Principal_SanAndres.jsp").forward(request, response);
+        }
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheEntera":
+                    request.getRequestDispatcher("Graficos/Grafico1.jsp").forward(request, response);
+                    break;
+            }
+        }
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheEntera_946ml":
+                    request.getRequestDispatcher("Graficos/Grafico2.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheEntera_150ml":
+                    request.getRequestDispatcher("Graficos/Grafico3.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheSaborizada":
+                    request.getRequestDispatcher("Graficos/Grafico4.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheSaborizada_1000ml":
+                    request.getRequestDispatcher("Graficos/Grafico5.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheSaborizada_150ml":
+                    request.getRequestDispatcher("Graficos/Grafico7.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheSaborizada_140ml":
+                    request.getRequestDispatcher("Graficos/Grafico6.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheChocolatada":
+                    request.getRequestDispatcher("Grafico8.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheChocolatada_1000ml":
+                    request.getRequestDispatcher("Grafico9.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheChocolatada_150ml":
+                    request.getRequestDispatcher("Grafico10.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Graficos")) {
+            switch (accion) {
+                case "ProductoUhtLecheChocolatada_140ml":
+                    request.getRequestDispatcher("Grafico11.jsp").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Insumos")) {
+            switch (accion) {
+                case "Listar":
+                    List<ListaInsumos> lista = listainsumosDAO.listar();
+                    request.setAttribute("listainsumos", lista);
+                    request.getRequestDispatcher("Genericos/Insumos.jsp").forward(request, response);
+                    break;
+                case "Delete":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    listainsumosDAO.delete(ide);
+                    request.getRequestDispatcher("Controlador?menu=Insumos&accion=Listar").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<ListaInsumos> lista3 = listainsumosDAO.buscarInsumos(dato);
+                    request.setAttribute("listainsumos", lista3);
+                    request.getRequestDispatcher("Genericos/Insumos.jsp").forward(request, response);
+                    break;
+                case "Agregar":
+                    String codigo = request.getParameter("txtCodigo");
+                    String tipo = request.getParameter("txtTipo");
+                    String nomgen = request.getParameter("txtNomGen");
+                    String descripcion = request.getParameter("txtDescripcion");
+                    String unidad = request.getParameter("txtUnidad");
+
+                    listainsumos.setCodigo(codigo);
+                    listainsumos.setTipo(tipo);
+                    listainsumos.setNomgen(nomgen);
+                    listainsumos.setDescripcion(descripcion);
+                    listainsumos.setUnidad(unidad);
+                    listainsumosDAO.agregar(listainsumos);
+
+                    request.getRequestDispatcher("Controlador?menu=Insumos&accion=Listar").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Reporte_Ingresos_Achacachi")) {
+            switch (accion) {
+                case "Listar":
+                    List<reporte_ingresos_achacachi> lista5 = reporteingresosachacachiDAO.listar();
+                    request.setAttribute("reporteingresosachacachi", lista5);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_Achacachi.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<reporte_ingresos_achacachi> lista333 = reporteingresosachacachiDAO.buscarReporteIngresosAchacachi(dato);
+                    request.setAttribute("reporteingresosachacachi", lista333);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_Achacachi.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Salidas_Achacachi")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Salidas_Achacachi> lista5 = reportesalidasachacachiDAO.listar();
+                    request.setAttribute("reportesalidasachacachi", lista5);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_Achacachi.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Salidas_Achacachi> lista333 = reportesalidasachacachiDAO.buscarReporteSalidasAchacachi(dato);
+                    request.setAttribute("reportesalidasachacachi", lista333);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_Achacachi.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Ingresos_Challapata")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Ingresos_Challapata> lista5 = reporteingresoschallapataDAO.listar();
+                    request.setAttribute("reporteingresoschallapata", lista5);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_Challapata.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Ingresos_Challapata> lista333 = reporteingresoschallapataDAO.buscarReporteIngresosChallapata(dato);
+                    request.setAttribute("reporteingresoschallapata", lista333);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_Challapata.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Salidas_Challapata")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_salidas_challapata> lista5 = reportesalidaschallapataDAO.listar();
+                    request.setAttribute("reportesalidaschallapata", lista5);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_Challapata.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_salidas_challapata> lista333 = reportesalidaschallapataDAO.buscarReporteSalidasChallapata(dato);
+                    request.setAttribute("reportesalidaschallapata", lista333);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_Challapata.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Ingresos_Ivirgarzama")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Ingresos_Ivirgarzama> lista5 = reporteingresosivirgarzamaDAO.listar();
+                    request.setAttribute("reporteingresosivirgarzama", lista5);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Ingresos_Ivirgarzama> lista333 = reporteingresosivirgarzamaDAO.buscarReporteIngresosIvirgarzama(dato);
+                    request.setAttribute("reporteingresosivirgarzama", lista333);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Salidas_Ivirgarzama")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Salidas_Ivirgarzama> lista5 = reportesalidasivirgarzamaDAO.listar();
+                    request.setAttribute("reportesalidasivirgarzama", lista5);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Salidas_Ivirgarzama> lista333 = reportesalidasivirgarzamaDAO.buscarReporteSalidasIvirgarzama(dato);
+                    request.setAttribute("reportesalidasivirgarzama", lista333);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Ingresos_SanAndres")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Ingresos_SanAndres> lista5 = reporteingresossanandresDAO.listar();
+                    request.setAttribute("reporteingresossanandres", lista5);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_SanAndres.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Ingresos_SanAndres> lista333 = reporteingresossanandresDAO.buscarReporteIngresosSanAndres(dato);
+                    request.setAttribute("reporteingresossanandres", lista333);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_SanAndres.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Salidas_SanAndres")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Salidas_SanAndres> lista5 = reportesalidassanandresDAO.listar();
+                    request.setAttribute("reportesalidassanandres", lista5);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_SanAndres.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Salidas_SanAndres> lista333 = reportesalidassanandresDAO.buscarReporteSalidasSanAndres(dato);
+                    request.setAttribute("reportesalidassanandres", lista333);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_SanAndres.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Ingresos_SanLorenzo")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Ingresos_SanLorenzo> lista5 = reporteingresossanlorenzoDAO.listar();
+                    request.setAttribute("reporteingresossanlorenzo", lista5);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_SanLorenzo.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Ingresos_SanLorenzo> lista333 = reporteingresossanlorenzoDAO.buscarReporteIngresosSanLorenzo(dato);
+                    request.setAttribute("reporteingresossanlorenzo", lista333);
+                    request.getRequestDispatcher("ReporteIngresos/Reporte_Ingresos_SanLorenzo.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Reporte_Salidas_SanLorenzo")) {
+            switch (accion) {
+                case "Listar":
+                    List<Reporte_Salidas_SanLorenzo> lista5 = reportesalidassanlorenzoDAO.listar();
+                    request.setAttribute("reportesalidassanlorenzo", lista5);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_SanLorenzo.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Reporte_Salidas_SanLorenzo> lista333 = reportesalidassanlorenzoDAO.buscarReporteSalidasSanLorenzo(dato);
+                    request.setAttribute("reportesalidassanlorenzo", lista333);
+                    request.getRequestDispatcher("ReporteSalidas/Reporte_Salidas_SanLorenzo.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("TotalIngresosPage")) {
+            switch (accion) {
+                case "Listar":
+                    List<TotalIngresosPages> lista5 = totalingresospageDAO.listar();
+                    request.setAttribute("totalingresospages", lista5);
+                    request.getRequestDispatcher("TotalExtras/Ingresos.jsp").forward(request, response);
+                    break;
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    TotalIngresosPages tip = totalingresospageDAO.listarId(ide);
+                    request.setAttribute("totalingresospageedit", tip);
+                    request.getRequestDispatcher("Controlador?menu=TotalIngresosPage&accion=Listar").forward(request, response);
+                    break;
+                case "Actualizar":
+                    String codigo = request.getParameter("txtCodigo");
+                    String descripcion = request.getParameter("txtDescripcion");
+                    String cantidad = request.getParameter("txtCantidad");
+                    String fecha = request.getParameter("txtFecha");
+                    String planta = request.getParameter("txtPlanta");
+                    //Part part2 = request.getPart("fileFoto");
+                    //InputStream inputStream2 = part2.getInputStream();
+                    //Part part3 = request.getPart("fileArchivo");
+                    //InputStream inputStream3 = part3.getInputStream();
+                    if (request.getPart("fileArchivo").getSize() <= 0) {
+                        totalingresospage.setCodigo(codigo);
+                        totalingresospage.setDescripcion(descripcion);
+                        totalingresospage.setCantidad(cantidad);
+                        totalingresospage.setFecha(fecha);
+                        totalingresospage.setPlanta(planta);
+                        totalingresospage.setId(ide);
+                        totalingresospageDAO.actualizarsinarchivo(totalingresospage);
+                    } else if (request.getPart("fileArchivo").getSize() > 0) {
+                        Part part3 = request.getPart("fileArchivo");
+                        InputStream inputStream3 = part3.getInputStream();
+                        totalingresospage.setCodigo(codigo);
+                        totalingresospage.setDescripcion(descripcion);
+                        totalingresospage.setCantidad(cantidad);
+                        totalingresospage.setFecha(fecha);
+                        totalingresospage.setPlanta(planta);
+                        totalingresospage.setArchivo(inputStream3);
+                        totalingresospage.setId(ide);
+                        totalingresospageDAO.actualizar(totalingresospage);
+                    }
+                    request.getRequestDispatcher("Controlador?menu=TotalIngresosPage&accion=Listar").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<TotalIngresosPages> lista333 = totalingresospageDAO.buscarTotalIngresosPages(dato);
+                    request.setAttribute("totalingresospages", lista333);
+                    request.getRequestDispatcher("TotalExtras/Ingresos.jsp").forward(request, response);
+                    break;
+                case "Delete":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    totalingresospageDAO.delete(ide);
+                    //metodos para enviar datos de los ingresos totales por plantas
+                    tiDAO.actualizartotalingresoscodigo_achacachi();
+                    tiDAO.actualizartotalingresoscodigo_challapata();
+                    tiDAO.actualizartotalingresoscodigo_ivirgarzama();
+                    tiDAO.actualizartotalingresoscodigo_sanlorenzo();
+                    tiDAO.actualizartotalingresoscodigo_sanandres();
+                    //metodos para enviar datos a total ingresos desde el total de cada planta
+                    tiDAO.delete_total_ingresos();
+                    tiDAO.actualizartotalingresos_achacachitotal();
+                    tiDAO.actualizartotalingresos_challapatatotal();
+                    tiDAO.actualizartotalingresos_ivirgarzamatotal();
+                    tiDAO.actualizartotalingresos_sanlorenzototal();
+                    tiDAO.actualizartotalingresos_sanandrestotal();
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_achacachi();
+                    tDAO.delete_saldos_achacachi_detallado();
+                    tDAO.delete_saldos_achacachi_ordenado();
+                    tDAO.delete_saldos_andres();
+                    tDAO.delete_saldos_andres_detallado();
+                    tDAO.delete_saldos_andres_ordenado();
+                    tDAO.delete_saldos_challapata();
+                    tDAO.delete_saldos_challapata_detallado();
+                    tDAO.delete_saldos_challapata_ordenado();
+                    tDAO.delete_saldos_ivirgarzama();
+                    tDAO.delete_saldos_ivirgarzama_detallado();
+                    tDAO.delete_saldos_ivirgarzama_ordenado();
+                    tDAO.delete_saldos_sanlorenzo();
+                    tDAO.delete_saldos_sanlorenzo_detallado();
+                    tDAO.delete_saldos_sanlorenzo_ordenado();
+                    tDAO.delete_saldos_totales();
+                    tDAO.delete_saldos_totales_detallado();
+                    tDAO.delete_saldos_totales_ordenado();
+
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_achacachi();
+                    tiDAO.enviar_datos_ingresos_challapata();
+                    tiDAO.enviar_datos_ingresos_ivirgarzama();
+                    tiDAO.enviar_datos_ingresos_sanlorenzo();
+                    tiDAO.enviar_datos_ingresos_sanandres();
+                    tiDAO.enviar_datos_ingresos_totales();
+                    tDAO.enviar_datos_salidas_achacachi();
+                    tDAO.enviar_datos_salidas_challapata();
+                    tDAO.enviar_datos_salidas_ivirgrarzama();
+                    tDAO.enviar_datos_salidas_sanlorenzo();
+                    tDAO.enviar_datos_salidas_sanandres();
+                    tDAO.enviar_datos_salidas_totales();
+
+                    //resumen saldos
+                    tDAO.saldos_resumen_achacachi();
+                    tDAO.saldos_resumen_challapata();
+                    tDAO.saldos_resumen_ivirgarzama();
+                    tDAO.saldos_resumen_sanlorenzo();
+                    tDAO.saldos_resumen_sanandres();
+                    tDAO.saldos_resumen_totales();
+
+                    //saldos ordenados
+                    tDAO.saldos_detallados_achacachi();
+                    tDAO.saldos_detallados_challapata();
+                    tDAO.saldos_detallados_ivirgarzama();
+                    tDAO.saldos_detallados_sanlorenzo();
+                    tDAO.saldos_detallados_sanandres();
+                    tDAO.saldos_detallados_totales();
+
+                    request.getRequestDispatcher("Controlador?menu=TotalIngresosPage&accion=Listar").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("TotalSalidasPage")) {
+            switch (accion) {
+                case "Listar":
+                    List<TotalSalidasPage> lista556 = totalsalidapageDAO.listar();
+                    request.setAttribute("totalsalidaspage", lista556);
+                    request.getRequestDispatcher("TotalExtras/Salidas.jsp").forward(request, response);
+                    break;
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    TotalSalidasPage tsp = totalsalidapageDAO.listarId(ide);
+                    request.setAttribute("totalsalidaspageedit", tsp);
+                    request.getRequestDispatcher("Controlador?menu=TotalSalidasPage&accion=Listar").forward(request, response);
+                    break;
+                case "Actualizar":
+                    String codigo = request.getParameter("txtCodigo");
+                    String descripcion = request.getParameter("txtDescripcion");
+                    String cantidad = request.getParameter("txtCantidad");
+                    String fecha = request.getParameter("txtFecha");
+                    String planta = request.getParameter("txtPlanta");
+                    String justificacion = request.getParameter("txtJustificacion");
+                    //Part part2 = request.getPart("fileFoto");
+                    //InputStream inputStream2 = part2.getInputStream();
+                    //Part part3 = request.getPart("fileArchivo");
+                    //InputStream inputStream3 = part3.getInputStream();
+
+                    totalsalidaspage.setCodigo(codigo);
+                    totalsalidaspage.setDescripcion(descripcion);
+                    totalsalidaspage.setCantidad(cantidad);
+                    totalsalidaspage.setFecha(fecha);
+                    totalsalidaspage.setPlanta(planta);
+                    totalsalidaspage.setJustificacion(justificacion);
+                    totalsalidaspage.setId(ide);
+                    totalsalidapageDAO.actualizar(totalsalidaspage);
+
+                    request.getRequestDispatcher("Controlador?menu=TotalSalidasPage&accion=Listar").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<TotalSalidasPage> lista3333 = totalsalidapageDAO.buscarTotalSalidasPages(dato);
+                    request.setAttribute("totalsalidaspage", lista3333);
+                    request.getRequestDispatcher("TotalExtras/Salidas.jsp").forward(request, response);
+                    break;
+                case "Delete":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    totalsalidapageDAO.delete(ide);
+
+                    //metodos para ingresar datos a las salidas totales por plantas
+                    tDAO.actualizartotalsalidascodigo_achacachi();
+                    tDAO.actualizartotalsalidascodigo_challapata();
+                    tDAO.actualizartotalsalidascodigo_ivirgarzama();
+                    tDAO.actualizartotalsalidascodigo_sanlorenzo();
+                    tDAO.actualizartotalsalidascodigo_sanandres();
+                    //metodos para enviar datos de las salidas totales por plantas al total salidas
+                    tDAO.delete_total_salidas_insumos();
+                    tDAO.actualizartotalsalidascodigo_achacachitotal();
+                    tDAO.actualizartotalsalidascodigo_challapatatotal();
+                    tDAO.actualizartotalsalidascodigo_ivirgarzamatotal();
+                    tDAO.actualizartotalsalidascodigo_sanlorenzototal();
+                    tDAO.actualizartotalsalidascodigo_sanandrestotal();
+
+                    //metodos para vaciar las bases de datos
+                    tDAO.delete_saldos_achacachi();
+                    tDAO.delete_saldos_achacachi_detallado();
+                    tDAO.delete_saldos_achacachi_ordenado();
+                    tDAO.delete_saldos_andres();
+                    tDAO.delete_saldos_andres_detallado();
+                    tDAO.delete_saldos_andres_ordenado();
+                    tDAO.delete_saldos_challapata();
+                    tDAO.delete_saldos_challapata_detallado();
+                    tDAO.delete_saldos_challapata_ordenado();
+                    tDAO.delete_saldos_ivirgarzama();
+                    tDAO.delete_saldos_ivirgarzama_detallado();
+                    tDAO.delete_saldos_ivirgarzama_ordenado();
+                    tDAO.delete_saldos_sanlorenzo();
+                    tDAO.delete_saldos_sanlorenzo_detallado();
+                    tDAO.delete_saldos_sanlorenzo_ordenado();
+                    tDAO.delete_saldos_totales();
+                    tDAO.delete_saldos_totales_detallado();
+                    tDAO.delete_saldos_totales_ordenado();
+
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_achacachi();
+                    tiDAO.enviar_datos_ingresos_challapata();
+                    tiDAO.enviar_datos_ingresos_ivirgarzama();
+                    tiDAO.enviar_datos_ingresos_sanlorenzo();
+                    tiDAO.enviar_datos_ingresos_sanandres();
+                    tiDAO.enviar_datos_ingresos_totales();
+                    tDAO.enviar_datos_salidas_achacachi();
+                    tDAO.enviar_datos_salidas_challapata();
+                    tDAO.enviar_datos_salidas_ivirgrarzama();
+                    tDAO.enviar_datos_salidas_sanlorenzo();
+                    tDAO.enviar_datos_salidas_sanandres();
+                    tDAO.enviar_datos_salidas_totales();
+
+                    //resumen saldos
+                    tDAO.saldos_resumen_achacachi();
+                    tDAO.saldos_resumen_challapata();
+                    tDAO.saldos_resumen_ivirgarzama();
+                    tDAO.saldos_resumen_sanlorenzo();
+                    tDAO.saldos_resumen_sanandres();
+                    tDAO.saldos_resumen_totales();
+
+                    //saldos ordenados
+                    tDAO.saldos_detallados_achacachi();
+                    tDAO.saldos_detallados_challapata();
+                    tDAO.saldos_detallados_ivirgarzama();
+                    tDAO.saldos_detallados_sanlorenzo();
+                    tDAO.saldos_detallados_sanandres();
+                    tDAO.saldos_detallados_totales();
+
+                    request.getRequestDispatcher("Controlador?menu=TotalSalidasPage&accion=Listar").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("Usuarios")) {
+            switch (accion) {
+                case "Listar":
+                    List<Usuario> lista = udao.listar();
+                    request.setAttribute("usuarios", lista);
+                    request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+                    break;
+                case "Agregar":
+                    String cont = request.getParameter("txtCont");
+                    String nom = request.getParameter("txtNom");
+                    String tel = request.getParameter("txtTel");
+                    String correo = request.getParameter("txtCorreo");
+                    String cargo = request.getParameter("txtCargo");
+                    String user = request.getParameter("txtUsuario");
+                    Part part = request.getPart("fileFoto");
+                    InputStream inputStream = part.getInputStream();
+                    String cant = request.getParameter("txtCant");
+                    String precio = request.getParameter("txtPrecio");
+                    Part part1 = request.getPart("fileArchivo");
+                    InputStream inputStream1 = part1.getInputStream();
+                    us.setCont(cont);
+                    us.setNom(nom);
+                    us.setTel(tel);
+                    us.setCorreo(correo);
+                    us.setCargo(cargo);
+                    us.setUser(user);
+                    us.setFoto(inputStream);
+                    us.setCant(cant);
+                    us.setPrecio(precio);
+                    us.setArchivo(inputStream1);
+                    udao.agregar(us);
+                    request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                    break;
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    Usuario u = udao.listarId(ide);
+                    request.setAttribute("usuariot", u);
+                    request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                    break;
+                case "Actualizar":
+                    String cont1 = request.getParameter("txtCont");
+                    String nom1 = request.getParameter("txtNom");
+                    String tel1 = request.getParameter("txtTel");
+                    String correo1 = request.getParameter("txtCorreo");
+                    String cargo1 = request.getParameter("txtCargo");
+                    String user1 = request.getParameter("txtUsuario");
+                    //Part part2 = request.getPart("fileFoto");
+                    //InputStream inputStream2 = part2.getInputStream();
+                    String cant1 = request.getParameter("txtCant");
+                    String precio1 = request.getParameter("txtPrecio");
+                    //Part part3 = request.getPart("fileArchivo");
+                    //InputStream inputStream3 = part3.getInputStream();
+                    if (request.getPart("fileFoto").getSize() <= 0 && request.getPart("fileArchivo").getSize() <= 0) {
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setId(ide);
+                        udao.actualizarsinambos(us);
+                    } else if (request.getPart("fileFoto").getSize() <= 0 && request.getPart("fileArchivo").getSize() > 0) {
+                        Part part3 = request.getPart("fileArchivo");
+                        InputStream inputStream3 = part3.getInputStream();
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setArchivo(inputStream3);
+                        us.setId(ide);
+                        udao.actualizarsinfoto(us);
+                    } else if (request.getPart("fileFoto").getSize() > 0 && request.getPart("fileArchivo").getSize() <= 0) {
+                        Part part2 = request.getPart("fileFoto");
+                        InputStream inputStream2 = part2.getInputStream();
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setFoto(inputStream2);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setId(ide);
+                        udao.actualizarsinarchivo(us);
+                    } else if (request.getPart("fileFoto").getSize() > 0 && request.getPart("fileArchivo").getSize() > 0) {
+                        Part part2 = request.getPart("fileFoto");
+                        InputStream inputStream2 = part2.getInputStream();
+                        Part part3 = request.getPart("fileArchivo");
+                        InputStream inputStream3 = part3.getInputStream();
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setFoto(inputStream2);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setArchivo(inputStream3);
+                        us.setId(ide);
+                        udao.actualizar(us);
+                    }
+                    request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Usuario> lista3 = udao.buscarT(dato);
+                    request.setAttribute("usuarios", lista3);
+                    request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+                    break;
+                case "Delete":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    udao.delete(ide);
+                    request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                    break;
+                case "stdk":
+                    int a;
+                    double b;
+                    a = udao.sumar();
+                    b = udao.promedio();
+                    request.setAttribute("sumar", a);
+                    request.setAttribute("promedio", b);
+                    List<Usuario> lista2 = udao.listar();
+                    request.setAttribute("usuarios", lista2);
+                    request.getRequestDispatcher("stdk.jsp").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+
+            }
+//            request.getRequestDispatcher("Genericos/Usuarios.jsp").forward(request, response);
+        }
+
+        if (menu.equals("PedidosEBA")) {
+            switch (accion) {
+                case "Listar":
+                    List<Demanda> listad = demdao.listardemanda();
+                    request.setAttribute("demanda", listad);
+                    request.getRequestDispatcher("Extras/PedidosEBA.jsp").forward(request, response);
+                    break;
+                case "Agregar":
+                    String pila = request.getParameter("txtPila");
+                    String producto = request.getParameter("txtProducto");
+                    String present = request.getParameter("txtPresentacion");
+                    String sabor = request.getParameter("txtSabor");
+                    String planta = request.getParameter("txtPlanta");
+                    String cantidad = request.getParameter("txtCantidad");
+                    String fecha = request.getParameter("txtFecha");
+                    String sem = request.getParameter("txtSemana");
+                    String merc = request.getParameter("txtMercado");
+                    String mercesp = request.getParameter("txtMercadoEsp");
+                    Part part = request.getPart("fileArchivoD");
+                    InputStream inputStream1 = part.getInputStream();
+                    dem.setPila(pila);
+                    dem.setProducto(producto);
+                    dem.setPresentacion(present);
+                    dem.setSabor(sabor);
+                    dem.setPlanta(planta);
+                    dem.setCantidad(cantidad);
+                    dem.setFecha(fecha);
+                    dem.setSemana(sem);
+                    dem.setMercado(merc);
+                    dem.setMercesp(mercesp);
+                    dem.setDocumento(inputStream1);
+                    demdao.agregardem(dem);
+                    request.getRequestDispatcher("Controlador?menu=PedidosEBA&accion=Listar").forward(request, response);
+                    break;
+                case "Editar":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    Demanda d = demdao.listarIdDem(ide);
+                    request.setAttribute("demandat", d);
+                    request.getRequestDispatcher("Controlador?menu=PedidosEBA&accion=Listar").forward(request, response);
+                    break;
+                case "Actualizar":
+                    String cont1 = request.getParameter("txtCont");
+                    String nom1 = request.getParameter("txtNom");
+                    String tel1 = request.getParameter("txtTel");
+                    String correo1 = request.getParameter("txtCorreo");
+                    String cargo1 = request.getParameter("txtCargo");
+                    String user1 = request.getParameter("txtUsuario");
+                    //Part part2 = request.getPart("fileFoto");
+                    //InputStream inputStream2 = part2.getInputStream();
+                    String cant1 = request.getParameter("txtCant");
+                    String precio1 = request.getParameter("txtPrecio");
+                    //Part part3 = request.getPart("fileArchivo");
+                    //InputStream inputStream3 = part3.getInputStream();
+                    if (request.getPart("fileFoto").getSize() <= 0 && request.getPart("fileArchivo").getSize() <= 0) {
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setId(ide);
+                        udao.actualizarsinambos(us);
+                    } else if (request.getPart("fileFoto").getSize() <= 0 && request.getPart("fileArchivo").getSize() > 0) {
+                        Part part3 = request.getPart("fileArchivo");
+                        InputStream inputStream3 = part3.getInputStream();
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setArchivo(inputStream3);
+                        us.setId(ide);
+                        udao.actualizarsinfoto(us);
+                    } else if (request.getPart("fileFoto").getSize() > 0 && request.getPart("fileArchivo").getSize() <= 0) {
+                        Part part2 = request.getPart("fileFoto");
+                        InputStream inputStream2 = part2.getInputStream();
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setFoto(inputStream2);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setId(ide);
+                        udao.actualizarsinarchivo(us);
+                    } else if (request.getPart("fileFoto").getSize() > 0 && request.getPart("fileArchivo").getSize() > 0) {
+                        Part part2 = request.getPart("fileFoto");
+                        InputStream inputStream2 = part2.getInputStream();
+                        Part part3 = request.getPart("fileArchivo");
+                        InputStream inputStream3 = part3.getInputStream();
+                        us.setCont(cont1);
+                        us.setNom(nom1);
+                        us.setTel(tel1);
+                        us.setCorreo(correo1);
+                        us.setCargo(cargo1);
+                        us.setUser(user1);
+                        us.setFoto(inputStream2);
+                        us.setCant(cant1);
+                        us.setPrecio(precio1);
+                        us.setArchivo(inputStream3);
+                        us.setId(ide);
+                        udao.actualizar(us);
+                    }
+                    request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                    break;
+                case "resumenpedidos":
+                    int a;
+                    double b;
+                    int c;
+                    a = udao.sumar();
+                    b = udao.promedio();
+                    c = estdao.tksubs2021();
+                    request.setAttribute("sumar", a);
+                    request.setAttribute("promedio", b);
+                    request.setAttribute("tksubs2021", c);
+                    List<Demanda> lista2 = demdao.listardemanda();
+                    request.setAttribute("demanda", lista2);
+                    request.getRequestDispatcher("Extras/resumenpedidos.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Demanda> lista3 = demdao.buscar(dato);
+                    request.setAttribute("demanda", lista3);
+                    request.getRequestDispatcher("Extras/resumenpedidos.jsp").forward(request, response);
+                    break;
+                case "Subsidio":
+                    bool = bool * (-1);
+                    if (bool == -1) {
+
+                    }
+                    break;
+                case "Delete":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    udao.delete(ide);
+                    request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                    break;
+            }
+
+        }
+
+        if (menu.equals("Saldos_Totales")) {
+            switch (accion) {
+                case "Listar":
+                    List<SaldosTotales> listasaldostotales = saldostotalesDAO.listar();
+                    request.setAttribute("saldostotales", listasaldostotales);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Totales.jsp").forward(request, response);
+                    break;
+                case "ListarDetalle":
+                    String codigo = request.getParameter("id");
+                    List<SaldosTotalesOrdenado> lista3 = saldostotalesordenadoDAO.filtrar_saldos_totales(codigo);
+                    request.setAttribute("totalesordenado", lista3);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Totales.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<SaldosTotales> lista3aa = saldostotalesDAO.buscarsaldos_totales(dato);
+                    request.setAttribute("saldostotales", lista3aa);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Totales.jsp").forward(request, response);
+                    request.setAttribute("txtBuscar", dato);
+                    break;
+                case "GraficoSaldos":
+                    //Grafico
+                    String codigo1 = request.getParameter("id");
+                    response.setContentType("image/JPEG");
+                    OutputStream sa = response.getOutputStream();
+
+                    String sql = "SELECT Descripcion, Diario AS Saldos, Fecha From saldos_totales_ordenado Where Codigo ='" + codigo1 + "'group by Fecha";
+
+                    try {
+                        con = cn.Conexion();
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+
+                        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+                        while (rs.next()) {
+                            data.addValue(rs.getDouble(2), "Total", "" + rs.getString(3));
+                        }
+
+                        JFreeChart grafico = ChartFactory.createLineChart(
+                                "2022",
+                                "FECHA", "Cantidad",
+                                data,
+                                PlotOrientation.VERTICAL,
+                                true,
+                                true, false);
+
+                        // propiedades del grafico    
+                        grafico.setBackgroundPaint(Color.WHITE);
+
+                        CategoryPlot categoryPlot = grafico.getCategoryPlot();
+                        categoryPlot.setBackgroundPaint(Color.lightGray);
+                        categoryPlot.setDomainGridlinePaint(Color.BLACK);
+                        categoryPlot.setDomainGridlinesVisible(true);
+                        categoryPlot.setFixedDomainAxisSpace(null);
+                        categoryPlot.setAxisOffset(RectangleInsets.ZERO_INSETS);
+
+                        // los puntos de la serie (es decir, los puntos de datos) son visibles    
+                        CategoryPlot categoryplot = (CategoryPlot) grafico.getPlot();
+                        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer) categoryplot.getRenderer();
+                        lineandshaperenderer.setBaseShapesVisible(true);
+                        lineandshaperenderer.setBaseLinesVisible(true);
+                        // etiquetas de datos    
+                        lineandshaperenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+                        lineandshaperenderer.setBaseItemLabelsVisible(true);
+
+                        // generar grafico
+                        ChartUtilities.writeChartAsJPEG(sa, grafico, 18000, 500);
+
+                    } catch (Exception ex) {
+
+                    }
+
+                    break;
+
+                case "ListarSaldos":
+                    //Listar
+                    //List<SaldosAchacachi> listasaldosachacachi1 = saldosachacachiDAO.listar();
+                    //request.setAttribute("saldosachacachi", listasaldosachacachi1);
+
+                    //ListarOdenadoPorCodigos
+                    String codigo2 = request.getParameter("id");
+                    List<SaldosTotalesOrdenado> lista4 = saldostotalesordenadoDAO.filtrar_saldos_totales(codigo2);
+                    request.setAttribute("totalesordenado", lista4);
+
+                    //llamar jsp
+                    request.getRequestDispatcher("SaldosDetallados/Totales_Ordenado.jsp").forward(request, response);
+
+                    break;
+            }
+        }
+
+        if (menu.equals("Saldos_Achacachi")) {
+            switch (accion) {
+                case "Listar":
+                    List<SaldosAchacachi> listasaldosachacachi = saldosachacachiDAO.listar();
+                    request.setAttribute("saldosachacachi", listasaldosachacachi);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Achacachi.jsp").forward(request, response);
+                    break;
+                case "ListarDetalle":
+                    String codigo = request.getParameter("id");
+                    List<SaldosAchacachiOrdenado> lista3 = saldosachacachiordenadoDAO.filtrar_saldos_achacachi(codigo);
+                    request.setAttribute("achacachiordenado", lista3);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Achacachi.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<SaldosAchacachi> lista3a = saldosachacachiDAO.buscarsaldos_achacachi(dato);
+                    request.setAttribute("saldosachacachi", lista3a);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Achacachi.jsp").forward(request, response);
+                    request.setAttribute("txtBuscar", dato);
+                    break;
+                case "GraficoSaldos":
+                    //Grafico
+                    String codigo1 = request.getParameter("id");
+                    response.setContentType("image/JPEG");
+                    OutputStream sa = response.getOutputStream();
+
+                    String sql = "SELECT Descripcion, Diario AS Saldos, Fecha From saldos_achacachi_ordenado Where Codigo ='" + codigo1 + "'group by Fecha";
+
+                    try {
+                        con = cn.Conexion();
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+
+                        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+                        while (rs.next()) {
+                            data.addValue(rs.getDouble(2), "Total", "" + rs.getString(3));
+                        }
+
+                        JFreeChart grafico = ChartFactory.createLineChart(
+                                "2022",
+                                "FECHA", "Cantidad",
+                                data,
+                                PlotOrientation.VERTICAL,
+                                true,
+                                true, false);
+
+                        // propiedades del grafico    
+                        grafico.setBackgroundPaint(Color.WHITE);
+
+                        CategoryPlot categoryPlot = grafico.getCategoryPlot();
+                        categoryPlot.setBackgroundPaint(Color.lightGray);
+                        categoryPlot.setDomainGridlinePaint(Color.BLACK);
+                        categoryPlot.setDomainGridlinesVisible(true);
+                        categoryPlot.setFixedDomainAxisSpace(null);
+                        categoryPlot.setAxisOffset(RectangleInsets.ZERO_INSETS);
+
+                        // los puntos de la serie (es decir, los puntos de datos) son visibles    
+                        CategoryPlot categoryplot = (CategoryPlot) grafico.getPlot();
+                        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer) categoryplot.getRenderer();
+                        lineandshaperenderer.setBaseShapesVisible(true);
+                        lineandshaperenderer.setBaseLinesVisible(true);
+                        // etiquetas de datos    
+                        lineandshaperenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+                        lineandshaperenderer.setBaseItemLabelsVisible(true);
+
+                        // generar grafico
+                        ChartUtilities.writeChartAsJPEG(sa, grafico, 18000, 500);
+
+                    } catch (Exception ex) {
+
+                    }
+
+                    break;
+
+                case "ListarSaldos":
+                    //Listar
+                    //List<SaldosAchacachi> listasaldosachacachi1 = saldosachacachiDAO.listar();
+                    //request.setAttribute("saldosachacachi", listasaldosachacachi1);
+
+                    //ListarOdenadoPorCodigo
+                    String codigo2 = request.getParameter("id");
+                    List<SaldosAchacachiOrdenado> lista4 = saldosachacachiordenadoDAO.filtrar_saldos_achacachi(codigo2);
+                    request.setAttribute("achacachiordenado", lista4);
+
+                    //llamar jsp
+                    request.getRequestDispatcher("SaldosDetallados/Achacachi_Ordenado_FisicoGeneral.jsp").forward(request, response);
+                    break;
+                case "ExportarPDF":
+                    //Document documento = new Document();
+
+                    //try {
+                    //String ruta = System.getProperty("user.home");
+                    //PdfWriter.getInstance(documento, new FileOutputStream(ruta+"/Desktop/Reporte_Alumnos.pdf"));
+                    //documento.open();
+                    //PdfPTable tabla = new PdfPTable(3);
+                    //tabla.addCell("Codigo");
+                    //tabla.addCell("Nombre del Alumno");
+                    //tabla.addCell("Grupo");
+                    //try {
+                    //Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3307/bd_aprov", "root", "762Ca84742Ca");
+                    //PreparedStatement pst = cn.prepareStatement("select * from saldos_achacachi");
+                    //ResultSet rs = pst.executeQuery();
+                    //if(rs.next()){
+                    //do {
+                    //tabla.addCell(rs.getString(1));
+                    //tabla.addCell(rs.getString(2));
+                    //tabla.addCell(rs.getString(3));
+                    //}    while(rs.next());
+                    //documento.add(tabla);
+                    //}
+                    //} catch (DocumentException | SQLException e) {
+                    //}
+                    //documento.close();
+                    //JOptionPane.showMessageDialog(null, "Reporte Creado");
+                    //} catch (DocumentException | HeadlessException | FileNotFoundException e) {
+                    //}
+                    List<SaldosAchacachi> listasaldosachacachi2 = saldosachacachiDAO.listar();
+                    request.setAttribute("saldosachacachi", listasaldosachacachi2);
+
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm;ss");
+                    String nomFile = dateFormat.format(new Date());
+                    String variable1 = "Content-Disposition";
+                    String variable2 = "attachment; filename=Estudiantes" + nomFile + ".pdf";
+                    response.setHeader(variable1, variable2);
+                    //ExportarPDF exportarPDF = new ExportarPDF(listasaldosachacachi2);
+                    //exportarPDF.export(response);
+                    request.getRequestDispatcher("Controlador?menu=Saldos_Achacachi&accion=Listar").forward(request, response);
+                    break;
+            }
+        }
+
+        if (menu.equals("Saldos_Challapata")) {
+            switch (accion) {
+                case "Listar":
+
+                    List<SaldosChallapata> listasaldoschallapata = saldoschallapataDAO.listar();
+                    request.setAttribute("saldoschallapata", listasaldoschallapata);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Challapata.jsp").forward(request, response);
+                    break;
+                case "ListarDetalle":
+
+                    String codigo = request.getParameter("id");
+                    List<SaldosChallapataOrdenado> lista3 = saldoschallapataordenadoDAO.filtrar_saldos_challapata(codigo);
+                    request.setAttribute("challapataordenado", lista3);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Challapata.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+
+                    String dato = request.getParameter("txtBuscar");
+                    List<SaldosChallapata> lista3ch = saldoschallapataDAO.buscarsaldos_challapata(dato);
+                    request.setAttribute("saldoschallapata", lista3ch);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Challapata.jsp").forward(request, response);
+                    break;
+                case "GraficoSaldos":
+                    //Grafico
+
+                    String codigo1 = request.getParameter("id");
+                    response.setContentType("image/JPEG");
+                    OutputStream sa = response.getOutputStream();
+
+                    String sql = "SELECT Descripcion, Diario AS Saldos, Fecha From saldos_challapata_ordenado Where Codigo ='" + codigo1 + "'group by Fecha";
+
+                    try {
+                        con = cn.Conexion();
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+
+                        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+                        while (rs.next()) {
+                            data.addValue(rs.getDouble(2), "Total", "" + rs.getString(3));
+                        }
+
+                        JFreeChart grafico = ChartFactory.createLineChart(
+                                "2022",
+                                "FECHA", "Cantidad",
+                                data,
+                                PlotOrientation.VERTICAL,
+                                true,
+                                true, false);
+
+                        // propiedades del grafico    
+                        grafico.setBackgroundPaint(Color.WHITE);
+
+                        CategoryPlot categoryPlot = grafico.getCategoryPlot();
+                        categoryPlot.setBackgroundPaint(Color.lightGray);
+                        categoryPlot.setDomainGridlinePaint(Color.BLACK);
+                        categoryPlot.setDomainGridlinesVisible(true);
+                        categoryPlot.setFixedDomainAxisSpace(null);
+                        categoryPlot.setAxisOffset(RectangleInsets.ZERO_INSETS);
+
+                        // los puntos de la serie (es decir, los puntos de datos) son visibles    
+                        CategoryPlot categoryplot = (CategoryPlot) grafico.getPlot();
+                        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer) categoryplot.getRenderer();
+                        lineandshaperenderer.setBaseShapesVisible(true);
+                        lineandshaperenderer.setBaseLinesVisible(true);
+                        // etiquetas de datos    
+                        lineandshaperenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+                        lineandshaperenderer.setBaseItemLabelsVisible(true);
+
+                        // generar grafico
+                        ChartUtilities.writeChartAsJPEG(sa, grafico, 18000, 500);
+
+                    } catch (Exception ex) {
+
+                    }
+
+                    break;
+
+                case "ListarSaldos":
+                    //Listar
+                    //List<SaldosChallapata> listasaldoschallapata1 = saldoschallapataDAO.listar();
+                    //request.setAttribute("saldoschallapata", listasaldoschallapata1);
+
+                    //ListarOdenadoPorCodigos
+                    String codigo2 = request.getParameter("id");
+                    List<SaldosChallapataOrdenado> lista4 = saldoschallapataordenadoDAO.filtrar_saldos_challapata(codigo2);
+                    request.setAttribute("challapataordenado", lista4);
+
+                    //llamar jsp
+                    request.getRequestDispatcher("SaldosDetallados/Challapata_Ordenado.jsp").forward(request, response);
+
+                    break;
+
+                //case "ListarSaldosreal":
+                //Listar
+                //List<SaldosChallapata> listasaldoschallapata1 = saldoschallapataDAO.listar();
+                //request.setAttribute("saldoschallapata", listasaldoschallapata1);
+                //ListarOdenadoPorCodigos
+                //String codigo22 = request.getParameter("id");
+                //tDAO.acumulador_saldos_ordenado_challapata_real();
+                //tDAO.saldos_ordenado_challapata_real(codigo22);
+                //List<SaldosChallapataOrdenado> lista44 = saldoschallapataordenadoDAO.listar();
+                //request.setAttribute("challapataordenado", lista44);
+                //llamar jsp
+                //request.getRequestDispatcher("SaldosDetallados/Challapata_Ordenado.jsp").forward(request, response);
+                //break;
+            }
+        }
+
+        if (menu.equals("Saldos_Ivirgarzama")) {
+            switch (accion) {
+                case "Listar":
+                    List<SaldosIvirgarzama> listasaldosivirgarzama = saldosivirgarzamaDAO.listar();
+                    request.setAttribute("saldosivirgarzama", listasaldosivirgarzama);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                case "ListarDetalle":
+                    String codigo = request.getParameter("id");
+                    List<SaldosIvirgarzamaOrdenado> lista3 = saldosivirgarzamaordenadoDAO.filtrar_saldos_ivirgarzama(codigo);
+                    request.setAttribute("ivirgarzamaordenado", lista3);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<SaldosIvirgarzama> lista3iv = saldosivirgarzamaDAO.buscarsaldos_ivirgarzama(dato);
+                    request.setAttribute("saldosivirgarzama", lista3iv);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_Ivirgarzama.jsp").forward(request, response);
+                    break;
+                case "GraficoSaldos":
+                    //Grafico
+                    String codigo1 = request.getParameter("id");
+                    response.setContentType("image/JPEG");
+                    OutputStream sa = response.getOutputStream();
+
+                    String sql = "SELECT Descripcion, Diario AS Saldos, Fecha From saldos_ivirgarzama_ordenado Where Codigo ='" + codigo1 + "'group by Fecha";
+
+                    try {
+                        con = cn.Conexion();
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+
+                        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+                        while (rs.next()) {
+                            data.addValue(rs.getDouble(2), "Total", "" + rs.getString(3));
+                        }
+
+                        JFreeChart grafico = ChartFactory.createLineChart(
+                                "2022",
+                                "FECHA", "Cantidad",
+                                data,
+                                PlotOrientation.VERTICAL,
+                                true,
+                                true, false);
+
+                        // propiedades del grafico    
+                        grafico.setBackgroundPaint(Color.WHITE);
+
+                        CategoryPlot categoryPlot = grafico.getCategoryPlot();
+                        categoryPlot.setBackgroundPaint(Color.lightGray);
+                        categoryPlot.setDomainGridlinePaint(Color.BLACK);
+                        categoryPlot.setDomainGridlinesVisible(true);
+                        categoryPlot.setFixedDomainAxisSpace(null);
+                        categoryPlot.setAxisOffset(RectangleInsets.ZERO_INSETS);
+
+                        // los puntos de la serie (es decir, los puntos de datos) son visibles    
+                        CategoryPlot categoryplot = (CategoryPlot) grafico.getPlot();
+                        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer) categoryplot.getRenderer();
+                        lineandshaperenderer.setBaseShapesVisible(true);
+                        lineandshaperenderer.setBaseLinesVisible(true);
+                        // etiquetas de datos    
+                        lineandshaperenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+                        lineandshaperenderer.setBaseItemLabelsVisible(true);
+
+                        // generar grafico
+                        ChartUtilities.writeChartAsJPEG(sa, grafico, 18000, 500);
+
+                    } catch (Exception ex) {
+
+                    }
+
+                    break;
+
+                case "ListarSaldos":
+                    //Listar
+                    //List<SaldosIvirgarzama> listasaldosivirgarzama1 = saldosivirgarzamaDAO.listar();
+                    //request.setAttribute("saldosivirgarzama", listasaldosivirgarzama1);
+
+                    //ListarOdenadoPorCodigos
+                    String codigo2 = request.getParameter("id");
+                    List<SaldosIvirgarzamaOrdenado> lista4 = saldosivirgarzamaordenadoDAO.filtrar_saldos_ivirgarzama(codigo2);
+                    request.setAttribute("ivirgarzamaordenado", lista4);
+
+                    //llamar jsp
+                    request.getRequestDispatcher("SaldosDetallados/Ivirgarzama_Ordenado.jsp").forward(request, response);
+
+                    break;
+            }
+        }
+
+        if (menu.equals("Saldos_SanLorenzo")) {
+            switch (accion) {
+                case "Listar":
+                    List<SaldosSanLorenzo> listasaldossanlorenzo = saldossanlorenzoDAO.listar();
+                    request.setAttribute("saldossanlorenzo", listasaldossanlorenzo);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_SanLorenzo.jsp").forward(request, response);
+                    break;
+                case "ListarDetalle":
+                    String codigo = request.getParameter("id");
+                    List<SaldosSanLorenzoOrdenado> lista3 = saldossanlorenzoordenadoDAO.filtrar_saldos_sanlorenzo(codigo);
+                    request.setAttribute("sanlorenzoordenado", lista3);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_SanLorenzo.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<SaldosSanLorenzo> lista3sl = saldossanlorenzoDAO.buscarsaldos_sanlorenzo(dato);
+                    request.setAttribute("saldossanlorenzo", lista3sl);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_SanLorenzo.jsp").forward(request, response);
+                    break;
+                case "GraficoSaldos":
+                    //Grafico
+                    String codigo1 = request.getParameter("id");
+                    response.setContentType("image/JPEG");
+                    OutputStream sa = response.getOutputStream();
+
+                    String sql = "SELECT Descripcion, Diario AS Saldos, Fecha From saldos_sanlorenzo_ordenado Where Codigo ='" + codigo1 + "'group by Fecha";
+
+                    try {
+                        con = cn.Conexion();
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+
+                        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+                        while (rs.next()) {
+                            data.addValue(rs.getDouble(2), "Total", "" + rs.getString(3));
+                        }
+
+                        JFreeChart grafico = ChartFactory.createLineChart(
+                                "2022",
+                                "FECHA", "Cantidad",
+                                data,
+                                PlotOrientation.VERTICAL,
+                                true,
+                                true, false);
+
+                        // propiedades del grafico    
+                        grafico.setBackgroundPaint(Color.WHITE);
+
+                        CategoryPlot categoryPlot = grafico.getCategoryPlot();
+                        categoryPlot.setBackgroundPaint(Color.lightGray);
+                        categoryPlot.setDomainGridlinePaint(Color.BLACK);
+                        categoryPlot.setDomainGridlinesVisible(true);
+                        categoryPlot.setFixedDomainAxisSpace(null);
+                        categoryPlot.setAxisOffset(RectangleInsets.ZERO_INSETS);
+
+                        // los puntos de la serie (es decir, los puntos de datos) son visibles    
+                        CategoryPlot categoryplot = (CategoryPlot) grafico.getPlot();
+                        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer) categoryplot.getRenderer();
+                        lineandshaperenderer.setBaseShapesVisible(true);
+                        lineandshaperenderer.setBaseLinesVisible(true);
+                        // etiquetas de datos    
+                        lineandshaperenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+                        lineandshaperenderer.setBaseItemLabelsVisible(true);
+
+                        // generar grafico
+                        ChartUtilities.writeChartAsJPEG(sa, grafico, 18000, 500);
+
+                    } catch (Exception ex) {
+
+                    }
+
+                    break;
+
+                case "ListarSaldos":
+                    //Listar
+                    //List<SaldosSanLorenzo> listasaldossanlorenzo1 = saldossanlorenzoDAO.listar();
+                    //request.setAttribute("saldossanlorenzo", listasaldossanlorenzo1);
+
+                    //ListarOdenadoPorCodigos
+                    String codigo2 = request.getParameter("id");
+                    List<SaldosSanLorenzoOrdenado> lista4 = saldossanlorenzoordenadoDAO.filtrar_saldos_sanlorenzo(codigo2);
+                    request.setAttribute("sanlorenzoordenado", lista4);
+
+                    //llamar jsp
+                    request.getRequestDispatcher("SaldosDetallados/SanLorenzo_Ordenado.jsp").forward(request, response);
+
+                    break;
+            }
+        }
+
+        if (menu.equals("Saldos_SanAndres")) {
+            switch (accion) {
+                case "Listar":
+                    List<SaldosSanAndres> listasaldossanandres = saldossanandresDAO.listar();
+                    request.setAttribute("saldossanandres", listasaldossanandres);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_SanAndres.jsp").forward(request, response);
+                    break;
+                case "ListarDetalle":
+                    String codigo = request.getParameter("id");
+                    List<SaldosSanAndresOrdenado> lista3 = saldossanandresordenadoDAO.filtrar_saldos_sanandres(codigo);
+                    request.setAttribute("sanandresordenado", lista3);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_SanAndres.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<SaldosSanAndres> lista3sa = saldossanandresDAO.buscarsaldos_sanandres(dato);
+                    request.setAttribute("saldossanandres", lista3sa);
+                    request.getRequestDispatcher("SaldosPlantas/Saldos_SanAndres.jsp").forward(request, response);
+                    break;
+                case "GraficoSaldos":
+                    //Grafico
+                    String codigo1 = request.getParameter("id");
+                    response.setContentType("image/JPEG");
+                    OutputStream sa = response.getOutputStream();
+
+                    String sql = "SELECT Descripcion, Diario AS Saldos, Fecha From saldos_sanandres_ordenado Where Codigo ='" + codigo1 + "'group by Fecha";
+
+                    try {
+                        con = cn.Conexion();
+                        ps = con.prepareStatement(sql);
+                        rs = ps.executeQuery();
+
+                        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+                        while (rs.next()) {
+                            data.addValue(rs.getDouble(2), "Total", "" + rs.getString(3));
+                        }
+
+                        JFreeChart grafico = ChartFactory.createLineChart(
+                                "2022",
+                                "FECHA", "Cantidad",
+                                data,
+                                PlotOrientation.VERTICAL,
+                                true,
+                                true, false);
+
+                        // propiedades del grafico    
+                        grafico.setBackgroundPaint(Color.WHITE);
+
+                        CategoryPlot categoryPlot = grafico.getCategoryPlot();
+                        categoryPlot.setBackgroundPaint(Color.lightGray);
+                        categoryPlot.setDomainGridlinePaint(Color.BLACK);
+                        categoryPlot.setDomainGridlinesVisible(true);
+                        categoryPlot.setFixedDomainAxisSpace(null);
+                        categoryPlot.setAxisOffset(RectangleInsets.ZERO_INSETS);
+
+                        // los puntos de la serie (es decir, los puntos de datos) son visibles    
+                        CategoryPlot categoryplot = (CategoryPlot) grafico.getPlot();
+                        LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer) categoryplot.getRenderer();
+                        lineandshaperenderer.setBaseShapesVisible(true);
+                        lineandshaperenderer.setBaseLinesVisible(true);
+                        // etiquetas de datos    
+                        lineandshaperenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+                        lineandshaperenderer.setBaseItemLabelsVisible(true);
+
+                        // generar grafico
+                        ChartUtilities.writeChartAsJPEG(sa, grafico, 18000, 500);
+
+                    } catch (Exception ex) {
+
+                    }
+
+                    break;
+
+                case "ListarSaldos":
+                    //Listar
+                    //List<SaldosSanAndres> listasaldossanandres1 = saldossanandresDAO.listar();
+                    //request.setAttribute("saldossanandres", listasaldossanandres1);
+
+                    //ListarOdenadoPorCodigos
+                    String codigo2 = request.getParameter("id");
+                    List<SaldosSanAndresOrdenado> lista4 = saldossanandresordenadoDAO.filtrar_saldos_sanandres(codigo2);
+                    request.setAttribute("sanandresordenado", lista4);
+
+                    //llamar jsp
+                    request.getRequestDispatcher("SaldosDetallados/SanAndres_Ordenado.jsp").forward(request, response);
+
+                    break;
+            }
+        }
+
+        if (menu.equals("IngresosAchacachi")) {
+            //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+            //Usuario userf = udao.listarId(iduserf);
+            //String plantaf = userf.getPlanta();
+            switch (accion) {
+                case "SeleccionarPlantaAchacachi":
+                    int iduser = Integer.parseInt(request.getParameter("Iduser"));
+                    Usuario user = udao.listarId(iduser);
+                    request.setAttribute("planta", user);
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarGeneralAchacachi").forward(request, response);
+                    break;
+                case "ListarGeneralAchacachi":
+                    //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario userf = udao.listarId(iduserf);
+                    //String plantaf = userf.getPlanta();
+                    //request.setAttribute("txtPlanta2", plantaf);
+
+                    List<Ingresos> lista_ing = ingDAO.listar();
+                    request.setAttribute("ingresos_achacachi", lista_ing);
+                    iachacachiDAO.deleteingresarT();
+                    //List<Sacar> lista_sacar = sdao.l7istarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                    break;
+                case "ListarAchacachi":                   
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi2").forward(request, response);
+                    break;
+                case "ListarAchacachi2":                   
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi3").forward(request, response);
+                    break;
+                case "ListarAchacachi3":                   
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi4").forward(request, response);
+                    break;
+                case "ListarAchacachi4":    
+                    for(int i = 1; i <= 10; i = i + 1){
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi5").forward(request, response);
+                    }
+                    break;
+                case "ListarAchacachi5":
+                    List<Ingresos> lista_ing2 = ingDAO.listar();
+                    request.setAttribute("ingresos_achacachi", lista_ing2);
+                    List<Ingresar> lista_ingresar = iachacachiDAO.listarIngresar();
+                    request.setAttribute("ingresar_achacachi", lista_ingresar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Ingresos> lista3 = ingDAO.buscarT(dato);
+                    request.setAttribute("ingresos_achacachi", lista3);
+
+                    List<Ingresar> lista_ingresar2 = iachacachiDAO.listarIngresar();
+                    request.setAttribute("ingresar_achacachi", lista_ingresar2);
+
+                    request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                    break;
+                case "IngresarParcial":
+                    List<Ingresos> lista_ing5 = ingDAO.listar();
+                    request.setAttribute("ingresos_achacachi", lista_ing5);
+
+                    List<Ingresar> lista_ingresar5 = iachacachiDAO.listarIngresar();
+                    request.setAttribute("ingresar_achacachi", lista_ingresar5);
+
+                    request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                    break;
+                case "EliminarAchacachi":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    iachacachiDAO.deleteingresar(ide);
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi").forward(request, response);
+                    break;
+                case "GenerarIngresoAchacachi":
+                    //Ingresa datos de ingresos a total insumos achacacachi y actualiza total ingresos general
+                    tiDAO.actualizartotalingresoscodigo_achacachi();
+                    //Borrar bases de datos
+                    tDAO.delete_saldos_achacachi();
+                    tDAO.delete_saldos_achacachi_detallado();
+                    tDAO.delete_saldos_achacachi_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_achacachi();
+                    tDAO.enviar_datos_salidas_achacachi();
+                    //saldos resumen
+                    tDAO.saldos_resumen_achacachi();
+
+                    //saldos ordenados
+                    tDAO.saldos_detallados_achacachi();
+                    //Mostrar pagina
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarGeneralAchacachi").forward(request, response);
+
+                    break;
+
+                case "Ingresar":
+
+                    //Part part1 = request.getPart("fileArchivo");
+                    //InputStream inputStream1 = part1.getInputStream();
+                    String cantidadingr = request.getParameter("txtCantidadIngresar");
+                    String loteingr = request.getParameter("txtLoteIngresar");
+                    String precioingr = request.getParameter("txtPrecioIngresar");
+                    String itemingr = request.getParameter("txtItemIngresar");
+                    String codigoingr = request.getParameter("txtCodigoIngresar");
+                    String unidadingr = request.getParameter("txtUnidadIngresar");
+
+                    //if (request.getPart("fileArchivo").getSize() <= 0 && cantidadingr.isEmpty()) {
+                    //JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD y cargar el ARCHIVP PDF");
+                    //List<Ingresos> lista_ing3 = ingDAO.listar();
+                    //request.setAttribute("ingresos_achacachi", lista_ing3);
+                    //List<Ingresar> lista_ingresar22 = iachacachiDAO.listarIngresar();
+                    //request.setAttribute("ingresar_achacachi", lista_ingresar22);
+                    //request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                    //} else if (cantidadingr.isEmpty()) {
+                    //JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                    //List<Ingresos> lista_ing4 = ingDAO.listar();
+                    //request.setAttribute("ingresos_achacachi", lista_ing4);
+                    //List<Ingresar> lista_ingresar3 = iachacachiDAO.listarIngresar();
+                    //request.setAttribute("ingresar_achacachi", lista_ingresar3);
+                    //request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                    //} else if (request.getPart("fileArchivo").getSize() <= 0) {
+                    //JOptionPane.showMessageDialog(null, "Debe cargar el ARCHIVP PDF");
+                    //List<Ingresos> lista_ing4 = ingDAO.listar();
+                    //request.setAttribute("ingresos_achacachi", lista_ing4);
+                    //List<Ingresar> lista_ingresar3 = iachacachiDAO.listarIngresar();
+                    //request.setAttribute("ingresar_achacachi", lista_ingresar3);
+                    //request.getRequestDispatcher("IngresosPlantas/IngresosAchacachi.jsp").forward(request, response);
+                    //} else {
+                    ////int idingr = Integer.parseInt(request.getParameter("txtIdIngr"));
+                    ////Ingresos i = ingDAO.listarIdIng(idingr);
+                    //int iduser1 = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario user1 = udao.listarId(iduser1);
+                    //int idplanta = 1;
+                    //String planta = request.getParameter("plantauserfinalingcont");
+                    String planta = "Achacachi";
+                    //Usuario user = udao.listarId(iduser);
+                    //User planta = u_plantaDAO.listarId(idplanta);
+
+                    timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+
+                    ////ingresarachacachi.setDodigo(i.getCodigo());
+                    ingresarachacachi.setDodigo(codigoingr);
+                    ////ingresarachacachi.setDescripcion(i.getDescripcion());
+                    ingresarachacachi.setDescripcion(itemingr);
+                    ingresarachacachi.setCantidad(cantidadingr);
+                    ingresarachacachi.setLote(loteingr);
+                    ingresarachacachi.setPrecio(precioingr);
+                    ingresarachacachi.setUnidad(unidadingr);
+                    //ingresarachacachi.setArchivo(inputStream1);
+                    ingresarachacachi.setFecha(timeStamp);
+                    ingresarachacachi.setPlanta(planta);
+                    iachacachiDAO.agregaringresar(ingresarachacachi);
+                    //request.setAttribute("sacar", s);
+                    //String codigosal = request.getParameter("txtCodigoSal");
+                    //String descripcionsal = request.getParameter("txtDescripcionSal");
+                    //String cantidadsal = request.getParameter("txtCantidadSal");
+                    //sac.setId(idsal);
+                    //sac.setDodigo(codigosal);
+                    //sac.setDescripcion(descripcionssal);
+                    //sac.setCantidad(cantidadsal);
+                    //sdao.agregarsacar(sac);
+                    //request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi").forward(request, response);
+                    //for(int i = 1; i <= 10; i = i + 1){
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi").forward(request, response);
+                    //}
+                //}
+
+                case "PrevioIngreso":
+                    int idingr2 = Integer.parseInt(request.getParameter("txtIdIngr"));
+                    PrevioIngreso pi = previoingresosDAO.listarIdIng(idingr2);
+
+                    //int iduser1 = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario user1 = udao.listarId(iduser1);
+                    //int idplanta = 1;
+                    //String planta = request.getParameter("plantauserfinalingcont");
+                    String planta2 = "Achacachi";
+                    //Usuario user = udao.listarId(iduser);
+                    //User planta = u_plantaDAO.listarId(idplanta);
+
+                    timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+
+                    previoingresarachacachi.setCodigo(pi.getCodigo());
+                    previoingresarachacachi.setDescripcion(pi.getDescripcion());
+                    previoingresarachacachi.setUnidad(pi.getUnidad());
+                    previoingresarachacachi.setFecha(timeStamp);
+                    previoingresarachacachi.setPlanta(planta2);
+                    previoingresarachacachiDAO.previoagregaringresar(previoingresarachacachi);
+                    //request.setAttribute("sacar", s);
+                    //String codigosal = request.getParameter("txtCodigoSal");
+                    //String descripcionsal = request.getParameter("txtDescripcionSal");
+                    //String cantidadsal = request.getParameter("txtCantidadSal");
+                    //sac.setId(idsal);
+                    //sac.setDodigo(codigosal);
+                    //sac.setDescripcion(descripcionssal);
+                    //sac.setCantidad(cantidadsal);
+                    //sdao.agregarsacar(sac);
+                    List<PrevioIngresarAchacachi> lista_previa_ingresar_achacachi = previoingresarachacachiDAO.listarIngresar();
+                    request.setAttribute("previa_ingresar_achacachi", lista_previa_ingresar_achacachi);
+                    request.getRequestDispatcher("Controlador?menu=IngresosAchacachi&accion=ListarAchacachi").forward(request, response);
+                    break;
+
+            }
+        }
+
+        if (menu.equals("IngresosChallapata")) {
+            //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+            //Usuario userf = udao.listarId(iduserf);
+            //String plantaf = userf.getPlanta();
+            switch (accion) {
+                case "SeleccionarPlantaChallapata":
+                    int iduser = Integer.parseInt(request.getParameter("Iduser"));
+                    Usuario user = udao.listarId(iduser);
+                    request.setAttribute("planta", user);
+                    request.getRequestDispatcher("Controlador?menu=IngresosChallapata&accion=ListarGeneralChallapata").forward(request, response);
+                    break;
+                case "ListarGeneralChallapata":
+                    //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario userf = udao.listarId(iduserf);
+                    //String plantaf = userf.getPlanta();
+                    //request.setAttribute("txtPlanta2", plantaf);
+                    
+                    List<Ingresos> lista_ing = ingDAO.listar();
+                    request.setAttribute("ingresos_challapata", lista_ing);
+                    ichallapataDAO.deleteingresarT();
+                    //List<Sacar> lista_sacar = sdao.l7istarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosChallapata.jsp").forward(request, response);
+                    break;
+                case "ListarChallapata":
+                    List<Ingresos> lista_ing2 = ingDAO.listar();
+                    request.setAttribute("ingresos_challapata", lista_ing2);
+                    List<Ingresar> lista_ingresar = ichallapataDAO.listarIngresar();
+                    request.setAttribute("ingresar_challapata", lista_ingresar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosChallapata.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Ingresos> lista3 = ingDAO.buscarT(dato);
+                    request.setAttribute("ingresos_challapata", lista3);
+
+                    List<Ingresar> lista_ingresar2 = ichallapataDAO.listarIngresar();
+                    request.setAttribute("ingresar_challapata", lista_ingresar2);
+
+                    request.getRequestDispatcher("IngresosPlantas/IngresosChallapata.jsp").forward(request, response);
+                    break;
+                case "EliminarChallapata":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    ichallapataDAO.deleteingresar(ide);
+                    request.getRequestDispatcher("Controlador?menu=IngresosChallapata&accion=ListarChallapata").forward(request, response);
+                    break;
+                case "GenerarIngresoChallapata":
+
+                    //Ingresa datos de ingresos a total insumos challapata y actualiza total ingresos general
+                    tiDAO.actualizartotalingresoscodigo_challapata();
+                    //borrar bases de datos
+                    tDAO.delete_saldos_challapata();
+                    tDAO.delete_saldos_challapata_detallado();
+                    tDAO.delete_saldos_challapata_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_challapata();
+                    tDAO.enviar_datos_salidas_challapata();
+                    //saldos resumen
+                    tDAO.saldos_resumen_challapata();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_challapata();
+                    request.getRequestDispatcher("Controlador?menu=IngresosChallapata&accion=ListarGeneralChallapata").forward(request, response);
+
+                    break;
+
+                case "Ingresar":
+
+                    Part part1 = request.getPart("fileArchivo");
+                    InputStream inputStream1 = part1.getInputStream();
+
+                    String cantidadingr = request.getParameter("txtCantidadIngr");
+
+                    if (request.getPart("fileArchivo").getSize() <= 0 && cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD y cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing3 = ingDAO.listar();
+                        request.setAttribute("ingresos_challapata", lista_ing3);
+                        List<Ingresar> lista_ingresar22 = ichallapataDAO.listarIngresar();
+                        request.setAttribute("ingresar_challapata", lista_ingresar22);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosChallapata.jsp").forward(request, response);
+                    } else if (cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_challapata", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = ichallapataDAO.listarIngresar();
+                        request.setAttribute("ingresar_challapata", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosChallapata.jsp").forward(request, response);
+                    } else if (request.getPart("fileArchivo").getSize() <= 0) {
+                        JOptionPane.showMessageDialog(null, "Debe cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_challapata", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = ichallapataDAO.listarIngresar();
+                        request.setAttribute("ingresar_challapata", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosChallapata.jsp").forward(request, response);
+                    } else {
+
+                        int idingr = Integer.parseInt(request.getParameter("txtIdIngr"));
+                        Ingresos i = ingDAO.listarIdIng(idingr);
+
+                        //int iduser1 = Integer.parseInt(request.getParameter("Iduser"));
+                        //Usuario user1 = udao.listarId(iduser1);
+                        //int idplanta = 1;
+                        //String planta = request.getParameter("plantauserfinalingcont");
+                        String planta = "Challapata";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+                        //Usuario user = udao.listarId(iduser);
+                        //User planta = u_plantaDAO.listarId(idplanta);
+
+                        ingresarchallapata.setDodigo(i.getCodigo());
+                        ingresarchallapata.setDescripcion(i.getDescripcion());
+                        ingresarchallapata.setUnidad(i.getUnidad());
+                        ingresarchallapata.setCantidad(cantidadingr);
+                        ingresarchallapata.setArchivo(inputStream1);
+                        ingresarchallapata.setFecha(timeStamp);
+                        ingresarchallapata.setPlanta(planta);
+                        ichallapataDAO.agregaringresar(ingresarchallapata);
+                        //request.setAttribute("sacar", s);
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+
+                        request.getRequestDispatcher("Controlador?menu=IngresosChallapata&accion=ListarChallapata").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("IngresosIvirgarzama")) {
+            //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+            //Usuario userf = udao.listarId(iduserf);
+            //String plantaf = userf.getPlanta();
+            switch (accion) {
+                case "SeleccionarPlantaIvirgarzama":
+                    int iduser = Integer.parseInt(request.getParameter("Iduser"));
+                    Usuario user = udao.listarId(iduser);
+                    request.setAttribute("planta", user);
+                    request.getRequestDispatcher("Controlador?menu=IngresosIvirgarzama&accion=ListarGeneralIvirgarzama").forward(request, response);
+                    break;
+                case "ListarGeneralIvirgarzama":
+                    //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario userf = udao.listarId(iduserf);
+                    //String plantaf = userf.getPlanta();
+                    //request.setAttribute("txtPlanta2", plantaf);
+
+                    List<Ingresos> lista_ing = ingDAO.listar();
+                    request.setAttribute("ingresos_ivirgarzama", lista_ing);
+                    iivirgarzamaDAO.deleteingresarT();
+                    //List<Sacar> lista_sacar = sdao.l7istarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosIvirgarzama.jsp").forward(request, response);
+                    break;
+                case "ListarIvirgarzama":
+                    List<Ingresos> lista_ing2 = ingDAO.listar();
+                    request.setAttribute("ingresos_ivirgarzama", lista_ing2);
+                    List<Ingresar> lista_ingresar = iivirgarzamaDAO.listarIngresar();
+                    request.setAttribute("ingresar_ivirgarzama", lista_ingresar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosIvirgarzama.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Ingresos> lista3 = ingDAO.buscarT(dato);
+                    request.setAttribute("ingresos_ivirgarzama", lista3);
+
+                    List<Ingresar> lista_ingresar2 = iivirgarzamaDAO.listarIngresar();
+                    request.setAttribute("ingresar_ivirgarzama", lista_ingresar2);
+
+                    request.getRequestDispatcher("IngresosPlantas/IngresosIvirgarzama.jsp").forward(request, response);
+                    break;
+                case "EliminarIvirgarzama":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    iivirgarzamaDAO.deleteingresar(ide);
+                    request.getRequestDispatcher("Controlador?menu=IngresosIvirgarzama&accion=ListarIvirgarzama").forward(request, response);
+                    break;
+                case "GenerarIngresoIvirgarzama":
+                    //Ingresa datos de ingresos a total insumos ivirgarzama y actualiza total ingresos general
+                    tiDAO.actualizartotalingresoscodigo_ivirgarzama();
+                    //Borrar bases de datos
+                    tDAO.delete_saldos_ivirgarzama();
+                    tDAO.delete_saldos_ivirgarzama_detallado();
+                    tDAO.delete_saldos_ivirgarzama_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_ivirgarzama();
+                    tDAO.enviar_datos_salidas_ivirgrarzama();
+                    //saldos resumen
+                    tDAO.saldos_resumen_ivirgarzama();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_ivirgarzama();
+                    request.getRequestDispatcher("Controlador?menu=IngresosIvirgarzama&accion=ListarGeneralIvirgarzama").forward(request, response);
+
+                    break;
+
+                case "Ingresar":
+
+                    Part part1 = request.getPart("fileArchivo");
+                    InputStream inputStream1 = part1.getInputStream();
+
+                    String cantidadingr = request.getParameter("txtCantidadIngr");
+
+                    if (request.getPart("fileArchivo").getSize() <= 0 && cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD y cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing3 = ingDAO.listar();
+                        request.setAttribute("ingresos_ivirgarzama", lista_ing3);
+                        List<Ingresar> lista_ingresar22 = iivirgarzamaDAO.listarIngresar();
+                        request.setAttribute("ingresar_ivirgarzama", lista_ingresar22);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosIvirgarzama.jsp").forward(request, response);
+                    } else if (cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_ivirgarzama", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = iivirgarzamaDAO.listarIngresar();
+                        request.setAttribute("ingresar_ivirgarzama", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosIvirgarzama.jsp").forward(request, response);
+                    } else if (request.getPart("fileArchivo").getSize() <= 0) {
+                        JOptionPane.showMessageDialog(null, "Debe cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_ivirgarzama", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = iivirgarzamaDAO.listarIngresar();
+                        request.setAttribute("ingresar_ivirgarzama", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosIvirgarzama.jsp").forward(request, response);
+                    } else {
+
+                        int idingr = Integer.parseInt(request.getParameter("txtIdIngr"));
+                        Ingresos i = ingDAO.listarIdIng(idingr);
+
+                        //int iduser1 = Integer.parseInt(request.getParameter("Iduser"));
+                        //Usuario user1 = udao.listarId(iduser1);
+                        //int idplanta = 1;
+                        //String planta = request.getParameter("plantauserfinalingcont");
+                        String planta = "Ivirgarzama";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+                        //Usuario user = udao.listarId(iduser);
+                        //User planta = u_plantaDAO.listarId(idplanta);
+
+                        ingresarivirgarzama.setDodigo(i.getCodigo());
+                        ingresarivirgarzama.setDescripcion(i.getDescripcion());
+                        ingresarivirgarzama.setUnidad(i.getUnidad());
+                        ingresarivirgarzama.setCantidad(cantidadingr);
+                        ingresarivirgarzama.setArchivo(inputStream1);
+                        ingresarivirgarzama.setFecha(timeStamp);
+                        ingresarivirgarzama.setPlanta(planta);
+                        iivirgarzamaDAO.agregaringresar(ingresarivirgarzama);
+                        //request.setAttribute("sacar", s);
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+
+                        request.getRequestDispatcher("Controlador?menu=IngresosIvirgarzama&accion=ListarIvirgarzama").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("IngresosSanLorenzo")) {
+            //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+            //Usuario userf = udao.listarId(iduserf);
+            //String plantaf = userf.getPlanta();
+            switch (accion) {
+                case "SeleccionarPlantaSanLorenzo":
+                    int iduser = Integer.parseInt(request.getParameter("Iduser"));
+                    Usuario user = udao.listarId(iduser);
+                    request.setAttribute("planta", user);
+                    request.getRequestDispatcher("Controlador?menu=IngresosSanLorenzo&accion=ListarGeneralSanLorenzo").forward(request, response);
+                    break;
+                case "ListarGeneralSanLorenzo":
+                    //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario userf = udao.listarId(iduserf);
+                    //String plantaf = userf.getPlanta();
+                    //request.setAttribute("txtPlanta2", plantaf);
+
+                    List<Ingresos> lista_ing = ingDAO.listar();
+                    request.setAttribute("ingresos_sanlorenzo", lista_ing);
+                    isanlorenzoDAO.deleteingresarT();
+                    //List<Sacar> lista_sacar = sdao.l7istarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosSanLorenzo.jsp").forward(request, response);
+                    break;
+                case "ListarSanLorenzo":
+                    List<Ingresos> lista_ing2 = ingDAO.listar();
+                    request.setAttribute("ingresos_sanlorenzo", lista_ing2);
+                    List<Ingresar> lista_ingresar = isanlorenzoDAO.listarIngresar();
+                    request.setAttribute("ingresar_sanlorenzo", lista_ingresar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosSanLorenzo.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Ingresos> lista3 = ingDAO.buscarT(dato);
+                    request.setAttribute("ingresos_sanlorenzo", lista3);
+
+                    List<Ingresar> lista_ingresar2 = isanlorenzoDAO.listarIngresar();
+                    request.setAttribute("ingresar_sanlorenzo", lista_ingresar2);
+
+                    request.getRequestDispatcher("IngresosPlantas/IngresosSanLorenzo.jsp").forward(request, response);
+                    break;
+                case "EliminarSanLorenzo":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    isanlorenzoDAO.deleteingresar(ide);
+                    request.getRequestDispatcher("Controlador?menu=IngresosSanLorenzo&accion=ListarSanLorenzo").forward(request, response);
+                    break;
+                case "GenerarIngresoSanLorenzo":
+                    //Ingresa datos de ingresos a total insumos sanlorenzo y actualiza total ingresos general
+                    tiDAO.actualizartotalingresoscodigo_sanlorenzo();
+                    //Borrar bases de datos
+                    tDAO.delete_saldos_sanlorenzo();
+                    tDAO.delete_saldos_sanlorenzo_detallado();
+                    tDAO.delete_saldos_sanlorenzo_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_sanlorenzo();
+                    tDAO.enviar_datos_salidas_sanlorenzo();
+                    //saldos resumen
+                    tDAO.saldos_resumen_sanlorenzo();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_sanlorenzo();
+                    request.getRequestDispatcher("Controlador?menu=IngresosSanLorenzo&accion=ListarGeneralSanLorenzo").forward(request, response);
+
+                    break;
+
+                case "Ingresar":
+
+                    Part part1 = request.getPart("fileArchivo");
+                    InputStream inputStream1 = part1.getInputStream();
+
+                    String cantidadingr = request.getParameter("txtCantidadIngr");
+
+                    if (request.getPart("fileArchivo").getSize() <= 0 && cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD y cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing3 = ingDAO.listar();
+                        request.setAttribute("ingresos_sanlorenzo", lista_ing3);
+                        List<Ingresar> lista_ingresar22 = isanlorenzoDAO.listarIngresar();
+                        request.setAttribute("ingresar_sanlorenzo", lista_ingresar22);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosSanLorenzo.jsp").forward(request, response);
+                    } else if (cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_sanlorenzo", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = isanlorenzoDAO.listarIngresar();
+                        request.setAttribute("ingresar_sanlorenzo", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosSanLorenzo.jsp").forward(request, response);
+                    } else if (request.getPart("fileArchivo").getSize() <= 0) {
+                        JOptionPane.showMessageDialog(null, "Debe cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_sanlorenzo", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = isanlorenzoDAO.listarIngresar();
+                        request.setAttribute("ingresar_sanlorenzo", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosSanLorenzo.jsp").forward(request, response);
+                    } else {
+
+                        int idingr = Integer.parseInt(request.getParameter("txtIdIngr"));
+                        Ingresos i = ingDAO.listarIdIng(idingr);
+
+                        //int iduser1 = Integer.parseInt(request.getParameter("Iduser"));
+                        //Usuario user1 = udao.listarId(iduser1);
+                        //int idplanta = 1;
+                        //String planta = request.getParameter("plantauserfinalingcont");
+                        String planta = "San Lorenzo";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+                        //Usuario user = udao.listarId(iduser);
+                        //User planta = u_plantaDAO.listarId(idplanta);
+
+                        ingresarsanlorenzo.setDodigo(i.getCodigo());
+                        ingresarsanlorenzo.setDescripcion(i.getDescripcion());
+                        ingresarsanlorenzo.setUnidad(i.getUnidad());
+                        ingresarsanlorenzo.setCantidad(cantidadingr);
+                        ingresarsanlorenzo.setArchivo(inputStream1);
+                        ingresarsanlorenzo.setFecha(timeStamp);
+                        ingresarsanlorenzo.setPlanta(planta);
+                        isanlorenzoDAO.agregaringresar(ingresarsanlorenzo);
+                        //request.setAttribute("sacar", s);
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+
+                        request.getRequestDispatcher("Controlador?menu=IngresosSanLorenzo&accion=ListarSanLorenzo").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("IngresosSanAndres")) {
+            //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+            //Usuario userf = udao.listarId(iduserf);
+            //String plantaf = userf.getPlanta();
+            switch (accion) {
+                case "SeleccionarPlantaSanAndres":
+                    int iduser = Integer.parseInt(request.getParameter("Iduser"));
+                    Usuario user = udao.listarId(iduser);
+                    request.setAttribute("planta", user);
+                    request.getRequestDispatcher("Controlador?menu=IngresosSasnAndres&accion=ListarGeneralSanAndres").forward(request, response);
+                    break;
+                case "ListarGeneralSanAndres":
+                    //int iduserf = Integer.parseInt(request.getParameter("Iduser"));
+                    //Usuario userf = udao.listarId(iduserf);
+                    //String plantaf = userf.getPlanta();
+                    //request.setAttribute("txtPlanta2", plantaf);
+
+                    List<Ingresos> lista_ing = ingDAO.listar();
+                    request.setAttribute("ingresos_sanandres", lista_ing);
+                    isanandresDAO.deleteingresarT();
+                    //List<Sacar> lista_sacar = sdao.l7istarSacar();
+                    //request.setAttribute("sacar", lista_sacar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosSanAndres.jsp").forward(request, response);
+                    break;
+                case "ListarSanAndres":
+                    List<Ingresos> lista_ing2 = ingDAO.listar();
+                    request.setAttribute("ingresos_sanandres", lista_ing2);
+                    List<Ingresar> lista_ingresar = isanandresDAO.listarIngresar();
+                    request.setAttribute("ingresar_sanandres", lista_ingresar);
+                    request.getRequestDispatcher("IngresosPlantas/IngresosSanAndres.jsp").forward(request, response);
+                    break;
+                case "Buscar":
+                    String dato = request.getParameter("txtBuscar");
+                    List<Ingresos> lista3 = ingDAO.buscarT(dato);
+                    request.setAttribute("ingresos_sanandres", lista3);
+
+                    List<Ingresar> lista_ingresar2 = isanandresDAO.listarIngresar();
+                    request.setAttribute("ingresar_sanandres", lista_ingresar2);
+
+                    request.getRequestDispatcher("IngresosPlantas/IngresosSanAndres.jsp").forward(request, response);
+                    break;
+                case "EliminarSanAndres":
+                    ide = Integer.parseInt(request.getParameter("id"));
+                    isanandresDAO.deleteingresar(ide);
+                    request.getRequestDispatcher("Controlador?menu=IngresosSanAndres&accion=ListarSanAndres").forward(request, response);
+                    break;
+                case "GenerarIngresoSanAndres":
+                    //Ingresa datos de ingresos a total insumos sanlorenzo y actualiza total ingresos general
+                    tiDAO.actualizartotalingresoscodigo_sanandres();
+                    //Borrar bases de datos
+                    tDAO.delete_saldos_andres();
+                    tDAO.delete_saldos_andres_detallado();
+                    tDAO.delete_saldos_andres_ordenado();
+                    //saldos detallados
+                    tiDAO.enviar_datos_ingresos_sanandres();
+                    tDAO.enviar_datos_salidas_sanandres();
+                    //saldos resumen
+                    tDAO.saldos_resumen_sanandres();
+                    //saldos ordenados
+                    tDAO.saldos_detallados_sanandres();
+                    request.getRequestDispatcher("Controlador?menu=IngresosSanAndres&accion=ListarGeneralSanAndres").forward(request, response);
+
+                    break;
+
+                case "Ingresar":
+
+                    Part part1 = request.getPart("fileArchivo");
+                    InputStream inputStream1 = part1.getInputStream();
+
+                    String cantidadingr = request.getParameter("txtCantidadIngr");
+
+                    if (request.getPart("fileArchivo").getSize() <= 0 && cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD y cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing3 = ingDAO.listar();
+                        request.setAttribute("ingresos_sanandres", lista_ing3);
+                        List<Ingresar> lista_ingresar22 = isanandresDAO.listarIngresar();
+                        request.setAttribute("ingresar_sanandres", lista_ingresar22);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosSanAndres.jsp").forward(request, response);
+                    } else if (cantidadingr.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Debe introducir un valor en CANTIDAD");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_sanandres", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = isanandresDAO.listarIngresar();
+                        request.setAttribute("ingresar_sanandres", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosSanAndres.jsp").forward(request, response);
+                    } else if (request.getPart("fileArchivo").getSize() <= 0) {
+                        JOptionPane.showMessageDialog(null, "Debe cargar el ARCHIVP PDF");
+                        List<Ingresos> lista_ing4 = ingDAO.listar();
+                        request.setAttribute("ingresos_sanandres", lista_ing4);
+                        List<Ingresar> lista_ingresar3 = isanandresDAO.listarIngresar();
+                        request.setAttribute("ingresar_sanandres", lista_ingresar3);
+                        request.getRequestDispatcher("IngresosPlantas/IngresosSanAndres.jsp").forward(request, response);
+                    } else {
+
+                        int idingr = Integer.parseInt(request.getParameter("txtIdIngr"));
+                        Ingresos i = ingDAO.listarIdIng(idingr);
+
+                        //int iduser1 = Integer.parseInt(request.getParameter("Iduser"));
+                        //Usuario user1 = udao.listarId(iduser1);
+                        //int idplanta = 1;
+                        //String planta = request.getParameter("plantauserfinalingcont");
+                        String planta = "San Andres";
+                        timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime());
+                        //Usuario user = udao.listarId(iduser);
+                        //User planta = u_plantaDAO.listarId(idplanta);
+
+                        ingresarsanandres.setDodigo(i.getCodigo());
+                        ingresarsanandres.setDescripcion(i.getDescripcion());
+                        ingresarsanandres.setUnidad(i.getUnidad());
+                        ingresarsanandres.setUnidad(i.getUnidad());
+                        ingresarsanandres.setCantidad(cantidadingr);
+                        ingresarsanandres.setArchivo(inputStream1);
+                        ingresarsanandres.setFecha(timeStamp);
+                        ingresarsanandres.setPlanta(planta);
+                        isanandresDAO.agregaringresar(ingresarsanandres);
+                        //request.setAttribute("sacar", s);
+                        //String codigosal = request.getParameter("txtCodigoSal");
+                        //String descripcionsal = request.getParameter("txtDescripcionSal");
+                        //String cantidadsal = request.getParameter("txtCantidadSal");
+                        //sac.setId(idsal);
+                        //sac.setDodigo(codigosal);
+                        //sac.setDescripcion(descripcionssal);
+                        //sac.setCantidad(cantidadsal);
+                        //sdao.agregarsacar(sac);
+
+                        request.getRequestDispatcher("Controlador?menu=IngresosSanAndres&accion=ListarSanAndres").forward(request, response);
+                    }
+                    break;
+
+            }
+        }
+
+        if (menu.equals("EntregasProveedores")) {
+            request.getRequestDispatcher("Extras/EntregasExtras/Proveedores.jsp").forward(request, response);
+        }
+        if (menu.equals("AccionDiaria")) {
+
+            //Registro diario cero de salidas
+            tDAO.total_salidas_diario_achacachi_cero();
+            tDAO.total_salidas_diario_challapata_cero();
+            tDAO.total_salidas_diario_ivirgarzama_cero();
+            tDAO.total_salidas_diario_sanlorenzo_cero();
+            tDAO.total_salidas_diario_sanandres_cero();
+
+            //Registro diario cero de ingresos
+            tiDAO.total_ingresos_diario_achacachi_cero();
+            tiDAO.total_ingresos_diario_challapata_cero();
+            tiDAO.total_ingresos_diario_ivirgarzama_cero();
+            tiDAO.total_ingresos_diario_sanlorenzo_cero();
+            tiDAO.total_ingresos_diario_sanandres_cero();
+
+            //Borrar base de datos total ingresos general y actualizarla
+            tiDAO.delete_total_ingresos();
+            tiDAO.actualizartotalingresos_achacachitotal();
+            tiDAO.actualizartotalingresos_challapatatotal();
+            tiDAO.actualizartotalingresos_ivirgarzamatotal();
+            tiDAO.actualizartotalingresos_sanlorenzototal();
+            tiDAO.actualizartotalingresos_sanandrestotal();
+
+            //Borrar base de datos total salidas general y actualizarla
+            tDAO.delete_total_salidas_insumos();
+            tDAO.actualizartotalsalidascodigo_achacachitotal();
+            tDAO.actualizartotalsalidascodigo_challapatatotal();
+            tDAO.actualizartotalsalidascodigo_ivirgarzamatotal();
+            tDAO.actualizartotalsalidascodigo_sanlorenzototal();
+            tDAO.actualizartotalsalidascodigo_sanandrestotal();
+
+            //metodos para vaciar las bases de datos
+            tDAO.delete_saldos_achacachi();
+            tDAO.delete_saldos_achacachi_detallado();
+            tDAO.delete_saldos_achacachi_ordenado();
+            tDAO.delete_saldos_andres();
+            tDAO.delete_saldos_andres_detallado();
+            tDAO.delete_saldos_andres_ordenado();
+            tDAO.delete_saldos_challapata();
+            tDAO.delete_saldos_challapata_detallado();
+            tDAO.delete_saldos_challapata_ordenado();
+            tDAO.delete_saldos_ivirgarzama();
+            tDAO.delete_saldos_ivirgarzama_detallado();
+            tDAO.delete_saldos_ivirgarzama_ordenado();
+            tDAO.delete_saldos_sanlorenzo();
+            tDAO.delete_saldos_sanlorenzo_detallado();
+            tDAO.delete_saldos_sanlorenzo_ordenado();
+            tDAO.delete_saldos_totales();
+            tDAO.delete_saldos_totales_detallado();
+            tDAO.delete_saldos_totales_ordenado();
+
+            //saldos detallados
+            tiDAO.enviar_datos_ingresos_achacachi();
+            tiDAO.enviar_datos_ingresos_challapata();
+            tiDAO.enviar_datos_ingresos_ivirgarzama();
+            tiDAO.enviar_datos_ingresos_sanlorenzo();
+            tiDAO.enviar_datos_ingresos_sanandres();
+            tiDAO.enviar_datos_ingresos_totales();
+            tDAO.enviar_datos_salidas_achacachi();
+            tDAO.enviar_datos_salidas_challapata();
+            tDAO.enviar_datos_salidas_ivirgrarzama();
+            tDAO.enviar_datos_salidas_sanlorenzo();
+            tDAO.enviar_datos_salidas_sanandres();
+            tDAO.enviar_datos_salidas_totales();
+
+            //resumen saldos
+            tDAO.saldos_resumen_achacachi();
+            tDAO.saldos_resumen_challapata();
+            tDAO.saldos_resumen_ivirgarzama();
+            tDAO.saldos_resumen_sanlorenzo();
+            tDAO.saldos_resumen_sanandres();
+            tDAO.saldos_resumen_totales();
+
+            //saldos ordenados
+            tDAO.saldos_detallados_achacachi();
+            tDAO.saldos_detallados_challapata();
+            tDAO.saldos_detallados_ivirgarzama();
+            tDAO.saldos_detallados_sanlorenzo();
+            tDAO.saldos_detallados_sanandres();
+            tDAO.saldos_detallados_totales();
+
+            request.getRequestDispatcher("Extras/Disenos.jsp").forward(request, response);
+
+        }
+
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
